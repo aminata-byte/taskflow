@@ -1,0 +1,1148 @@
+/* ============================================
+   TASKFLOW - Design Principal
+   Style: Dark Modern Kanban
+   Fonts: Sora (titres) + DM Sans (corps)
+   ============================================ */
+
+/* --- Import des polices Google --- */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+/* --- Variables CSS globales --- */
+:root {
+  --bg-primary: #0D1117;
+  /* Fond principal très sombre */
+  --bg-secondary: #161B22;
+  /* Fond secondaire */
+  --bg-card: #1C2230;
+  /* Fond des cartes */
+  --bg-column: #141922;
+  /* Fond des colonnes */
+  --accent-1: #6366F1;
+  /* Indigo vif */
+  --accent-2: #8B5CF6;
+  /* Violet */
+  --accent-3: #06B6D4;
+  /* Cyan */
+  --accent-grad: linear-gradient(135deg, #6366F1, #8B5CF6);
+  /* Dégradé accent */
+  --text-primary: #E2E8F0;
+  /* Texte principal */
+  --text-secondary: #94A3B8;
+  /* Texte secondaire */
+  --text-muted: #475569;
+  /* Texte atténué */
+  --border: rgba(99, 102, 241, 0.2);
+  /* Bordure subtile */
+  --border-hover: rgba(99, 102, 241, 0.5);
+  /* Bordure au survol */
+  --success: #10B981;
+  /* Vert succès */
+  --warning: #F59E0B;
+  /* Orange alerte */
+  --danger: #EF4444;
+  /* Rouge danger */
+  --radius: 12px;
+  /* Rayon des coins */
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  /* Ombre principale */
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.3);
+  /* Ombre carte */
+}
+
+/* --- Reset & Base --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  /* Texture de bruit subtile en fond */
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+}
+
+/* --- Typographie --- */
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+.navbar-taskflow {
+  background: rgba(22, 27, 34, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Logo TaskFlow */
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.navbar-logo .logo-icon {
+  width: 34px;
+  height: 34px;
+  background: var(--accent-grad);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+}
+
+.navbar-logo .logo-text {
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  background: var(--accent-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Liens de navigation */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--text-primary);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+/* Dropdown utilisateur */
+.user-menu {
+  position: relative;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  background: var(--accent-grad);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.user-avatar:hover {
+  border-color: var(--accent-1);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+}
+
+/* ============================================
+   LAYOUT PRINCIPAL
+   ============================================ */
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* En-tête de page */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.5s ease;
+}
+
+.page-title {
+  font-size: 2rem;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+}
+
+.page-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+/* ============================================
+   BOUTONS
+   ============================================ */
+
+/* Bouton principal (dégradé) */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-grad);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+  color: white;
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Bouton secondaire (outline) */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  padding: 9px 18px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+  background: rgba(99, 102, 241, 0.08);
+}
+
+/* Bouton danger */
+.btn-danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-danger:hover {
+  background: rgba(239, 68, 68, 0.25);
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* Bouton edit */
+.btn-edit {
+  background: rgba(99, 102, 241, 0.12);
+  color: var(--accent-1);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-edit:hover {
+  background: rgba(99, 102, 241, 0.22);
+  color: var(--accent-1);
+  border-color: var(--accent-1);
+}
+
+/* ============================================
+   CARTES GÉNÉRIQUES
+   ============================================ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  transition: all 0.25s ease;
+  animation: fadeInUp 0.5s ease both;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   DASHBOARD - Statistiques
+   ============================================ */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+/* Carte stat individuelle */
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  animation: fadeInUp 0.5s ease both;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Numéros d'animation décalée pour les cartes */
+.stat-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.stat-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.stat-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.stat-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.stat-card:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent-grad);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow);
+}
+
+.stat-card:hover::before {
+  opacity: 1;
+}
+
+/* Icône dans la carte stat */
+.stat-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.stat-icon.purple {
+  background: rgba(99, 102, 241, 0.15);
+}
+
+.stat-icon.blue {
+  background: rgba(6, 182, 212, 0.15);
+}
+
+.stat-icon.green {
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.stat-icon.yellow {
+  background: rgba(245, 158, 11, 0.15);
+}
+
+.stat-icon.red {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+/* Valeur de la stat */
+.stat-value {
+  font-family: 'Sora', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* ============================================
+   LISTE DES PROJETS
+   ============================================ */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+/* Carte de projet */
+.project-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  animation: fadeInUp 0.5s ease both;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animation décalée */
+.project-card:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.project-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.project-card:nth-child(3) {
+  animation-delay: 0.15s;
+}
+
+.project-card:nth-child(4) {
+  animation-delay: 0.2s;
+}
+
+.project-card:nth-child(5) {
+  animation-delay: 0.25s;
+}
+
+.project-card:nth-child(6) {
+  animation-delay: 0.3s;
+}
+
+/* Barre colorée en haut */
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent-grad);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: left;
+}
+
+.project-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+}
+
+.project-card:hover::before {
+  transform: scaleX(1);
+}
+
+.project-name {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.project-description {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin-bottom: 1.2rem;
+  min-height: 40px;
+}
+
+/* Badges de stats du projet */
+.project-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.meta-badge {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--accent-1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.project-actions {
+  display: flex;
+  gap: 8px;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+/* ============================================
+   VUE KANBAN (show.blade)
+   ============================================ */
+.kanban-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  animation: fadeInUp 0.4s ease;
+}
+
+.kanban-board {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  /* Scrollbar stylisée */
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-1) var(--bg-secondary);
+}
+
+.kanban-board::-webkit-scrollbar {
+  height: 6px;
+}
+
+.kanban-board::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: 3px;
+}
+
+.kanban-board::-webkit-scrollbar-thumb {
+  background: var(--accent-1);
+  border-radius: 3px;
+}
+
+/* Colonne Kanban */
+.kanban-column {
+  background: var(--bg-column);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  width: 320px;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 200px);
+  animation: fadeInUp 0.5s ease both;
+}
+
+.kanban-column:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.kanban-column:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.kanban-column:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* En-tête de la colonne */
+.column-header {
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg-column);
+  border-radius: 14px 14px 0 0;
+  z-index: 1;
+}
+
+.column-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.column-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* Couleurs des points selon la colonne */
+.column-dot.todo {
+  background: #6366F1;
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+}
+
+.column-dot.progress {
+  background: #F59E0B;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+}
+
+.column-dot.done {
+  background: #10B981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+}
+
+.column-title {
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+/* Badge compteur de tâches */
+.column-count {
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--accent-1);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 20px;
+  padding: 2px 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* Corps scrollable de la colonne */
+.column-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+/* Formulaire d'ajout de tâche */
+.task-add-form {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--border);
+  background: rgba(99, 102, 241, 0.03);
+  border-radius: 0 0 14px 14px;
+}
+
+.task-add-form input,
+.task-add-form select,
+.task-add-form textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  padding: 8px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  margin-bottom: 8px;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.task-add-form input:focus,
+.task-add-form select:focus,
+.task-add-form textarea:focus {
+  border-color: var(--accent-1);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.task-add-form input::placeholder {
+  color: var(--text-muted);
+}
+
+.task-add-form select option {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.btn-add-task {
+  width: 100%;
+  background: rgba(99, 102, 241, 0.12);
+  color: var(--accent-1);
+  border: 1px dashed rgba(99, 102, 241, 0.4);
+  border-radius: 8px;
+  padding: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-add-task:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-style: solid;
+}
+
+/* ============================================
+   CARTES DE TÂCHES
+   ============================================ */
+.task-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  transition: all 0.2s ease;
+  cursor: grab;
+  position: relative;
+  animation: taskSlideIn 0.3s ease both;
+}
+
+@keyframes taskSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.task-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.task-card:active {
+  cursor: grabbing;
+}
+
+/* Bandeau de priorité à gauche */
+.task-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 10px 0 0 10px;
+}
+
+.task-card.priority-haute::before {
+  background: var(--danger);
+}
+
+.task-card.priority-moyenne::before {
+  background: var(--warning);
+}
+
+.task-card.priority-basse::before {
+  background: var(--success);
+}
+
+/* Titre de la tâche */
+.task-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  padding-left: 8px;
+  line-height: 1.4;
+}
+
+/* Description de la tâche */
+.task-description {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  padding-left: 8px;
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+}
+
+/* Pied de la carte tâche */
+.task-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 8px;
+}
+
+/* Badge de priorité */
+.priority-badge {
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.priority-badge.haute {
+  background: rgba(239, 68, 68, 0.15);
+  color: #F87171;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.priority-badge.moyenne {
+  background: rgba(245, 158, 11, 0.15);
+  color: #FBBF24;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.priority-badge.basse {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34D399;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+/* Actions de la tâche */
+.task-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.task-card:hover .task-actions {
+  opacity: 1;
+}
+
+.task-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.task-btn.edit {
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--accent-1);
+}
+
+.task-btn.edit:hover {
+  background: rgba(99, 102, 241, 0.3);
+  color: var(--accent-1);
+}
+
+.task-btn.delete {
+  background: rgba(239, 68, 68, 0.12);
+  color: #F87171;
+}
+
+.task-btn.delete:hover {
+  background: rgba(239, 68, 68, 0.25);
+  color: #F87171;
+}
+
+/* Date d'échéance */
+.task-due {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-left: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.task-due.overdue {
+  color: #F87171;
+}
+
+/* ============================================
+   FORMULAIRES (create / edit)
+   ============================================ */
+.form-container {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.form-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  animation: fadeInUp 0.4s ease;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: 'Sora', sans-serif;
+}
+
+.form-control {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-primary);
+  padding: 12px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.form-control:focus {
+  border-color: var(--accent-1);
+  background: rgba(99, 102, 241, 0.05);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.form-control::placeholder {
+  color: var(--text-muted);
+}
+
+.form-control option {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.form-control.is-invalid {
+  border-color: var(--danger);
+}
+
+.invalid-feedback {
+  color: #F87171;
+  font-size: 0.82rem;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ============================================
+   ALERTS / MESSAGES
+   ============================================ */
+.alert {
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: fadeInDown 0.4s ease;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert-success {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34D399;
+}
+
+.alert-danger {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #F87171;
+}
+
+/* ============================================
+   PAGE VIDE (empty state)
+   ============================================ */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  animation: fadeInUp 0.5s ease;
+}
+
+.empty-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+  display: block;
+}
+
+.empty-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.empty-text {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ============================================
+   BREADCRUMB
+   ============================================ */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  animation: fadeInUp 0.3s ease;
+}
+
+.breadcrumb a {
+  color: var(--accent-1);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.breadcrumb a:hover {
+  color: var(--accent-2);
+}
+
+.breadcrumb .separator {
+  color: var(--text-muted);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 1rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .kanban-board {
+    flex-direction: column;
+  }
+
+  .kanban-column {
+    width: 100%;
+    min-width: unset;
+    max-height: unset;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .navbar-taskflow {
+    padding: 0 1rem;
+  }
+}
