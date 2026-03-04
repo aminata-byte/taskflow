@@ -33,7 +33,4 @@ RUN chown -R www-data:www-data /var/www/html \
 RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' \
     /etc/apache2/sites-available/000-default.conf
 
-# ── Générer la clé Laravel ──
-RUN php artisan key:generate --force
-
 EXPOSE 80
