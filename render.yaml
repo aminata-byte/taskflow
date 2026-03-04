@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: taskflow
+    env: php
+    buildCommand: "./build.sh"
+    startCommand: "cd public && php -S 0.0.0.0:$PORT"
+    envVars:
+      - key: APP_NAME
+        value: TaskFlow
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        generateValue: true
+      - key: SESSION_DRIVER
+        value: file
+      - key: CACHE_STORE
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: LOG_CHANNEL
+        value: stderr
