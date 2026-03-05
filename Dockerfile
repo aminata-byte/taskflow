@@ -1,72 +1,44 @@
-# Image PHP officielle avec Apache
 FROM php:8.2-apache
 
-# Installation des extensions PHP nécessaires pour Laravel + PostgreSQL
+# ── Extensions PHP ──
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    libpq-dev \
-    zip \
-    unzip \
-    nodejs \
-    npm \
-    && docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    git curl zip unzip \
+    libpng-dev libonig-dev libxml2-dev libpq-dev \
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql pgsql mbstring exif pcntl bcmath gd \
+    && a2enmod rewrite \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Activer mod_rewrite pour Laravel
-RUN a2enmod rewrite
+# ── Composer ──
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Installer Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Définir le dossier de travail
+# ── Copier le projet (inclut déjà public/build et public/css) ──
 WORKDIR /var/www/html
-
-# Copier tous les fichiers du projet
 COPY . .
 
-# Installer les dépendances PHP
-RUN composer install --no-dev --optimize-autoloader
+# ── Dépendances PHP uniquement (pas npm, les assets sont déjà compilés) ──
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Installer les dépendances JS et compiler les assets
-RUN npm install && npm run build
+# ── Créer .env ──
+RUN cp .env.example .env && php artisan key:generate --force
 
-# Copier le fichier .env.example en .env
-RUN cp .env.example .env
+# ── Permissions ──
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html \
+    && chmod -R 777 /var/www/html/storage \
+    && chmod -R 777 /var/www/html/bootstrap/cache
 
-# Générer la clé Laravel
-RUN php artisan key:generate --force
-
-# Permissions sur les dossiers storage et cache
-RUN chown -R www-data:www-data /var/www/html/storage \
-    && chown -R www-data:www-data /var/www/html/bootstrap/cache \
-    && chmod -R 775 /var/www/html/storage \
-    && chmod -R 775 /var/www/html/bootstrap/cache
-
-# Configuration Apache : pointer vers /public
-RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' \
+# ── Apache → /public ──
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' \
     /etc/apache2/sites-available/000-default.conf
 
-# Autoriser .htaccess dans le dossier public
 RUN echo '<Directory /var/www/html/public>\n\
-    Options Indexes FollowSymLinks\n\
     AllowOverride All\n\
     Require all granted\n\
 </Directory>' >> /etc/apache2/sites-available/000-default.conf
 
-# Script de démarrage : migrate + lancer Apache
-RUN echo '#!/bin/bash\n\
-php artisan config:clear\n\
-php artisan migrate --force\n\
-apache2-foreground' > /start.sh \
-&& chmod +x /start.sh
+# ── Script démarrage ──
+RUN printf '#!/bin/bash\nphp artisan config:clear\nphp artisan migrate --force\napache2-foreground\n' > /start.sh \
+    && chmod +x /start.sh
 
-# Port exposé
 EXPOSE 80
-
-# Lancer le script de démarrage
 CMD ["/start.sh"]
