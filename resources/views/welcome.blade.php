@@ -90,7 +90,7 @@
 <body>
     <div class="hero">
 
-        <div class="hero-logo">⚡</div>
+        <div class="hero-logo"></div>
 
         <h1 class="hero-title">TaskFlow</h1>
 
@@ -105,7 +105,7 @@
                 </a>
             @else
                 <a href="{{ route('register') }}" class="btn-primary">
-                    🚀 Commencer gratuitement
+                     Commencer gratuitement
                 </a>
                 <a href="{{ route('login') }}" class="btn-secondary">
                     Se connecter
@@ -114,10 +114,10 @@
         </div>
 
         <div class="hero-features">
-            <div class="feature-item"><span>📋</span> Kanban Board</div>
-            <div class="feature-item"><span>✅</span> Gestion des tâches</div>
-            <div class="feature-item"><span>📊</span> Statistiques</div>
-            <div class="feature-item"><span>🔒</span> Sécurisé</div>
+            <div class="feature-item"><span></span> Kanban Board</div>
+            <div class="feature-item"><span></span> Gestion des tâches</div>
+            <div class="feature-item"><span></span></span> Statistiques</div>
+            <div class="feature-item"><span></span> Sécurisé</div>
         </div>
 
     </div>

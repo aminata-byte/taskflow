@@ -1,55 +1,33 @@
 /* ============================================
    TASKFLOW - Design Principal
-   Style: Dark Modern Kanban
+   Style: Dark Modern Kanban — Cartes bien visibles
    Fonts: Sora (titres) + DM Sans (corps)
    ============================================ */
 
-/* --- Import des polices Google --- */
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-/* --- Variables CSS globales --- */
 :root {
   --bg-primary: #0D1117;
-  /* Fond principal très sombre */
   --bg-secondary: #161B22;
-  /* Fond secondaire */
-  --bg-card: #1C2230;
-  /* Fond des cartes */
-  --bg-column: #141922;
-  /* Fond des colonnes */
+  --bg-card: #1a1f35;
+  --bg-column: #12172a;
   --accent-1: #6366F1;
-  /* Indigo vif */
   --accent-2: #8B5CF6;
-  /* Violet */
   --accent-3: #06B6D4;
-  /* Cyan */
   --accent-grad: linear-gradient(135deg, #6366F1, #8B5CF6);
-  /* Dégradé accent */
-  --text-primary: #E2E8F0;
-  /* Texte principal */
+  --text-primary: #F1F5F9;
   --text-secondary: #94A3B8;
-  /* Texte secondaire */
   --text-muted: #475569;
-  /* Texte atténué */
-  --border: rgba(99, 102, 241, 0.2);
-  /* Bordure subtile */
-  --border-hover: rgba(99, 102, 241, 0.5);
-  /* Bordure au survol */
+  --border: rgba(99, 102, 241, 0.25);
+  --border-hover: rgba(99, 102, 241, 0.6);
   --success: #10B981;
-  /* Vert succès */
   --warning: #F59E0B;
-  /* Orange alerte */
   --danger: #EF4444;
-  /* Rouge danger */
-  --radius: 12px;
-  /* Rayon des coins */
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  /* Ombre principale */
-  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.3);
-  /* Ombre carte */
+  --radius: 14px;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
-/* --- Reset & Base --- */
 * {
   margin: 0;
   padding: 0;
@@ -58,16 +36,19 @@
 
 body {
   font-family: 'DM Sans', sans-serif;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
   min-height: 100vh;
-  /* Texture de bruit subtile en fond */
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
   background-image:
-    radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+    radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 55%),
+    url("im.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
-/* --- Typographie --- */
 h1,
 h2,
 h3,
@@ -81,10 +62,10 @@ h4 {
    NAVBAR
    ============================================ */
 .navbar-taskflow {
-  background: rgba(22, 27, 34, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
+  background: rgba(10, 13, 20, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.2);
   padding: 0 2rem;
   height: 64px;
   display: flex;
@@ -108,7 +89,6 @@ h4 {
   }
 }
 
-/* Logo TaskFlow */
 .navbar-logo {
   display: flex;
   align-items: center;
@@ -125,7 +105,7 @@ h4 {
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
 }
 
 .navbar-logo .logo-text {
@@ -138,7 +118,6 @@ h4 {
   background-clip: text;
 }
 
-/* Liens de navigation */
 .nav-links {
   display: flex;
   align-items: center;
@@ -157,10 +136,9 @@ h4 {
 
 .nav-link:hover {
   color: var(--text-primary);
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(99, 102, 241, 0.15);
 }
 
-/* Dropdown utilisateur */
 .user-menu {
   position: relative;
 }
@@ -182,11 +160,11 @@ h4 {
 
 .user-avatar:hover {
   border-color: var(--accent-1);
-  box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 0 14px rgba(99, 102, 241, 0.5);
 }
 
 /* ============================================
-   LAYOUT PRINCIPAL
+   LAYOUT
    ============================================ */
 .page-container {
   max-width: 1400px;
@@ -194,7 +172,6 @@ h4 {
   padding: 2rem 1.5rem;
 }
 
-/* En-tête de page */
 .page-header {
   display: flex;
   align-items: flex-start;
@@ -217,8 +194,6 @@ h4 {
 /* ============================================
    BOUTONS
    ============================================ */
-
-/* Bouton principal (dégradé) */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -234,12 +209,12 @@ h4 {
   cursor: pointer;
   text-decoration: none;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+  box-shadow: 0 6px 22px rgba(99, 102, 241, 0.6);
   color: white;
 }
 
@@ -247,14 +222,13 @@ h4 {
   transform: translateY(0);
 }
 
-/* Bouton secondaire (outline) */
 .btn-secondary {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: transparent;
+  background: rgba(26, 31, 53, 0.9);
   color: var(--text-secondary);
-  border: 1px solid var(--border);
+  border: 1px solid rgba(99, 102, 241, 0.25);
   padding: 9px 18px;
   border-radius: 10px;
   font-family: 'DM Sans', sans-serif;
@@ -268,14 +242,13 @@ h4 {
 .btn-secondary:hover {
   color: var(--text-primary);
   border-color: var(--border-hover);
-  background: rgba(99, 102, 241, 0.08);
+  background: rgba(99, 102, 241, 0.15);
 }
 
-/* Bouton danger */
 .btn-danger {
   background: rgba(239, 68, 68, 0.15);
   color: var(--danger);
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  border: 1px solid rgba(239, 68, 68, 0.35);
   padding: 6px 12px;
   border-radius: 8px;
   font-size: 0.8rem;
@@ -289,16 +262,15 @@ h4 {
 }
 
 .btn-danger:hover {
-  background: rgba(239, 68, 68, 0.25);
-  color: var(--danger);
+  background: rgba(239, 68, 68, 0.28);
   border-color: var(--danger);
+  color: var(--danger);
 }
 
-/* Bouton edit */
 .btn-edit {
   background: rgba(99, 102, 241, 0.12);
   color: var(--accent-1);
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  border: 1px solid rgba(99, 102, 241, 0.3);
   padding: 6px 12px;
   border-radius: 8px;
   font-size: 0.8rem;
@@ -312,8 +284,7 @@ h4 {
 }
 
 .btn-edit:hover {
-  background: rgba(99, 102, 241, 0.22);
-  color: var(--accent-1);
+  background: rgba(99, 102, 241, 0.25);
   border-color: var(--accent-1);
 }
 
@@ -321,10 +292,11 @@ h4 {
    CARTES GÉNÉRIQUES
    ============================================ */
 .card {
-  background: var(--bg-card);
+  background: rgba(22, 28, 50, 0.95);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.5rem;
+  box-shadow: var(--shadow-card);
   transition: all 0.25s ease;
   animation: fadeInUp 0.5s ease both;
 }
@@ -348,7 +320,7 @@ h4 {
 }
 
 /* ============================================
-   DASHBOARD - Statistiques
+   STATS
    ============================================ */
 .stats-grid {
   display: grid;
@@ -357,9 +329,8 @@ h4 {
   margin-bottom: 2rem;
 }
 
-/* Carte stat individuelle */
 .stat-card {
-  background: var(--bg-card);
+  background: rgba(22, 28, 50, 0.96);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.5rem;
@@ -370,9 +341,9 @@ h4 {
   transition: all 0.25s ease;
   position: relative;
   overflow: hidden;
+  box-shadow: var(--shadow-card);
 }
 
-/* Numéros d'animation décalée pour les cartes */
 .stat-card:nth-child(1) {
   animation-delay: 0.1s;
 }
@@ -406,16 +377,15 @@ h4 {
 }
 
 .stat-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   border-color: var(--border-hover);
-  box-shadow: var(--shadow);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(99, 102, 241, 0.2);
 }
 
 .stat-card:hover::before {
   opacity: 1;
 }
 
-/* Icône dans la carte stat */
 .stat-icon {
   width: 52px;
   height: 52px;
@@ -428,26 +398,25 @@ h4 {
 }
 
 .stat-icon.purple {
-  background: rgba(99, 102, 241, 0.15);
+  background: rgba(99, 102, 241, 0.2);
 }
 
 .stat-icon.blue {
-  background: rgba(6, 182, 212, 0.15);
+  background: rgba(6, 182, 212, 0.2);
 }
 
 .stat-icon.green {
-  background: rgba(16, 185, 129, 0.15);
+  background: rgba(16, 185, 129, 0.2);
 }
 
 .stat-icon.yellow {
-  background: rgba(245, 158, 11, 0.15);
+  background: rgba(245, 158, 11, 0.2);
 }
 
 .stat-icon.red {
-  background: rgba(239, 68, 68, 0.15);
+  background: rgba(239, 68, 68, 0.2);
 }
 
-/* Valeur de la stat */
 .stat-value {
   font-family: 'Sora', sans-serif;
   font-size: 2rem;
@@ -463,7 +432,7 @@ h4 {
 }
 
 /* ============================================
-   LISTE DES PROJETS
+   PROJETS
    ============================================ */
 .projects-grid {
   display: grid;
@@ -471,9 +440,8 @@ h4 {
   gap: 1.25rem;
 }
 
-/* Carte de projet */
 .project-card {
-  background: var(--bg-card);
+  background: rgba(22, 28, 50, 0.96);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.5rem;
@@ -481,9 +449,9 @@ h4 {
   transition: all 0.25s ease;
   position: relative;
   overflow: hidden;
+  box-shadow: var(--shadow-card);
 }
 
-/* Animation décalée */
 .project-card:nth-child(1) {
   animation-delay: 0.05s;
 }
@@ -508,7 +476,6 @@ h4 {
   animation-delay: 0.3s;
 }
 
-/* Barre colorée en haut */
 .project-card::before {
   content: '';
   position: absolute;
@@ -525,7 +492,7 @@ h4 {
 .project-card:hover {
   border-color: var(--border-hover);
   transform: translateY(-4px);
-  box-shadow: var(--shadow);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(99, 102, 241, 0.2);
 }
 
 .project-card:hover::before {
@@ -548,7 +515,6 @@ h4 {
   min-height: 40px;
 }
 
-/* Badges de stats du projet */
 .project-meta {
   display: flex;
   align-items: center;
@@ -558,9 +524,9 @@ h4 {
 }
 
 .meta-badge {
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(99, 102, 241, 0.15);
   color: var(--accent-1);
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.3);
   padding: 3px 10px;
   border-radius: 20px;
   font-size: 0.78rem;
@@ -575,7 +541,7 @@ h4 {
 }
 
 /* ============================================
-   VUE KANBAN (show.blade)
+   KANBAN
    ============================================ */
 .kanban-header {
   display: flex;
@@ -593,9 +559,8 @@ h4 {
   align-items: flex-start;
   overflow-x: auto;
   padding-bottom: 1rem;
-  /* Scrollbar stylisée */
   scrollbar-width: thin;
-  scrollbar-color: var(--accent-1) var(--bg-secondary);
+  scrollbar-color: var(--accent-1) transparent;
 }
 
 .kanban-board::-webkit-scrollbar {
@@ -603,8 +568,7 @@ h4 {
 }
 
 .kanban-board::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
-  border-radius: 3px;
+  background: transparent;
 }
 
 .kanban-board::-webkit-scrollbar-thumb {
@@ -612,9 +576,8 @@ h4 {
   border-radius: 3px;
 }
 
-/* Colonne Kanban */
 .kanban-column {
-  background: var(--bg-column);
+  background: rgba(16, 20, 40, 0.97);
   border: 1px solid var(--border);
   border-radius: 14px;
   width: 320px;
@@ -623,6 +586,7 @@ h4 {
   flex-direction: column;
   max-height: calc(100vh - 200px);
   animation: fadeInUp 0.5s ease both;
+  box-shadow: var(--shadow-card);
 }
 
 .kanban-column:nth-child(1) {
@@ -637,7 +601,6 @@ h4 {
   animation-delay: 0.3s;
 }
 
-/* En-tête de la colonne */
 .column-header {
   padding: 1rem 1.25rem;
   display: flex;
@@ -646,7 +609,7 @@ h4 {
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
-  background: var(--bg-column);
+  background: rgba(16, 20, 40, 0.98);
   border-radius: 14px 14px 0 0;
   z-index: 1;
 }
@@ -663,20 +626,19 @@ h4 {
   border-radius: 50%;
 }
 
-/* Couleurs des points selon la colonne */
 .column-dot.todo {
   background: #6366F1;
-  box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.7);
 }
 
 .column-dot.progress {
   background: #F59E0B;
-  box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.7);
 }
 
 .column-dot.done {
   background: #10B981;
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.7);
 }
 
 .column-title {
@@ -686,18 +648,16 @@ h4 {
   color: var(--text-primary);
 }
 
-/* Badge compteur de tâches */
 .column-count {
   background: rgba(99, 102, 241, 0.15);
   color: var(--accent-1);
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  border: 1px solid rgba(99, 102, 241, 0.3);
   border-radius: 20px;
   padding: 2px 10px;
   font-size: 0.8rem;
   font-weight: 700;
 }
 
-/* Corps scrollable de la colonne */
 .column-body {
   flex: 1;
   overflow-y: auto;
@@ -706,14 +666,13 @@ h4 {
   flex-direction: column;
   gap: 0.75rem;
   scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 }
 
-/* Formulaire d'ajout de tâche */
 .task-add-form {
   padding: 1rem 1.25rem;
   border-top: 1px solid var(--border);
-  background: rgba(99, 102, 241, 0.03);
+  background: rgba(99, 102, 241, 0.04);
   border-radius: 0 0 14px 14px;
 }
 
@@ -721,7 +680,7 @@ h4 {
 .task-add-form select,
 .task-add-form textarea {
   width: 100%;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.06);
   border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--text-primary);
@@ -745,15 +704,15 @@ h4 {
 }
 
 .task-add-form select option {
-  background: var(--bg-card);
+  background: #1a1f35;
   color: var(--text-primary);
 }
 
 .btn-add-task {
   width: 100%;
-  background: rgba(99, 102, 241, 0.12);
+  background: rgba(99, 102, 241, 0.1);
   color: var(--accent-1);
-  border: 1px dashed rgba(99, 102, 241, 0.4);
+  border: 1px dashed rgba(99, 102, 241, 0.45);
   border-radius: 8px;
   padding: 8px;
   font-family: 'DM Sans', sans-serif;
@@ -773,17 +732,18 @@ h4 {
 }
 
 /* ============================================
-   CARTES DE TÂCHES
+   TÂCHES
    ============================================ */
 .task-card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
+  background: rgba(26, 32, 56, 0.98);
+  border: 1px solid rgba(99, 102, 241, 0.18);
   border-radius: 10px;
   padding: 1rem;
   transition: all 0.2s ease;
   cursor: grab;
   position: relative;
   animation: taskSlideIn 0.3s ease both;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 }
 
 @keyframes taskSlideIn {
@@ -799,16 +759,15 @@ h4 {
 }
 
 .task-card:hover {
-  border-color: var(--border-hover);
+  border-color: rgba(99, 102, 241, 0.5);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99, 102, 241, 0.15);
 }
 
 .task-card:active {
   cursor: grabbing;
 }
 
-/* Bandeau de priorité à gauche */
 .task-card::before {
   content: '';
   position: absolute;
@@ -831,7 +790,6 @@ h4 {
   background: var(--success);
 }
 
-/* Titre de la tâche */
 .task-title {
   font-weight: 600;
   font-size: 0.9rem;
@@ -841,7 +799,6 @@ h4 {
   line-height: 1.4;
 }
 
-/* Description de la tâche */
 .task-description {
   color: var(--text-secondary);
   font-size: 0.8rem;
@@ -850,7 +807,6 @@ h4 {
   line-height: 1.5;
 }
 
-/* Pied de la carte tâche */
 .task-footer {
   display: flex;
   align-items: center;
@@ -858,7 +814,6 @@ h4 {
   padding-left: 8px;
 }
 
-/* Badge de priorité */
 .priority-badge {
   padding: 2px 9px;
   border-radius: 20px;
@@ -871,22 +826,21 @@ h4 {
 .priority-badge.haute {
   background: rgba(239, 68, 68, 0.15);
   color: #F87171;
-  border: 1px solid rgba(239, 68, 68, 0.25);
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .priority-badge.moyenne {
   background: rgba(245, 158, 11, 0.15);
   color: #FBBF24;
-  border: 1px solid rgba(245, 158, 11, 0.25);
+  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .priority-badge.basse {
   background: rgba(16, 185, 129, 0.15);
   color: #34D399;
-  border: 1px solid rgba(16, 185, 129, 0.25);
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
-/* Actions de la tâche */
 .task-actions {
   display: flex;
   gap: 4px;
@@ -928,11 +882,10 @@ h4 {
 }
 
 .task-btn.delete:hover {
-  background: rgba(239, 68, 68, 0.25);
+  background: rgba(239, 68, 68, 0.28);
   color: #F87171;
 }
 
-/* Date d'échéance */
 .task-due {
   font-size: 0.75rem;
   color: var(--text-muted);
@@ -948,7 +901,7 @@ h4 {
 }
 
 /* ============================================
-   FORMULAIRES (create / edit)
+   FORMULAIRES
    ============================================ */
 .form-container {
   max-width: 640px;
@@ -956,11 +909,12 @@ h4 {
 }
 
 .form-card {
-  background: var(--bg-card);
+  background: rgba(22, 28, 50, 0.97);
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 2rem;
   animation: fadeInUp 0.4s ease;
+  box-shadow: var(--shadow);
 }
 
 .form-group {
@@ -980,7 +934,7 @@ h4 {
 
 .form-control {
   width: 100%;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border);
   border-radius: 10px;
   color: var(--text-primary);
@@ -993,7 +947,7 @@ h4 {
 
 .form-control:focus {
   border-color: var(--accent-1);
-  background: rgba(99, 102, 241, 0.05);
+  background: rgba(99, 102, 241, 0.07);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
@@ -1002,7 +956,7 @@ h4 {
 }
 
 .form-control option {
-  background: var(--bg-card);
+  background: #1a1f35;
   color: var(--text-primary);
 }
 
@@ -1020,7 +974,7 @@ h4 {
 }
 
 /* ============================================
-   ALERTS / MESSAGES
+   ALERTS
    ============================================ */
 .alert {
   border-radius: 10px;
@@ -1047,19 +1001,19 @@ h4 {
 }
 
 .alert-success {
-  background: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.14);
+  border: 1px solid rgba(16, 185, 129, 0.35);
   color: #34D399;
 }
 
 .alert-danger {
-  background: rgba(239, 68, 68, 0.12);
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.14);
+  border: 1px solid rgba(239, 68, 68, 0.35);
   color: #F87171;
 }
 
 /* ============================================
-   PAGE VIDE (empty state)
+   EMPTY STATE
    ============================================ */
 .empty-state {
   text-align: center;

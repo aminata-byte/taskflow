@@ -152,7 +152,7 @@
     <div class="auth-wrapper">
         <div class="auth-card">
             <div class="auth-logo">
-                <div class="auth-logo-icon">⚡</div>
+                <div class="auth-logo-icon"></div>
                 <div class="auth-logo-text">TaskFlow</div>
             </div>
             {{ $slot }}

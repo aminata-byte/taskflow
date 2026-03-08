@@ -6,19 +6,19 @@
 
         <div class="page-header">
             <div>
-                <h1 class="page-title">📋 Mes Projets</h1>
+                <h1 class="page-title">Mes Projets</h1>
                 <p class="page-subtitle">{{ $projects->count() }} projet(s) au total</p>
             </div>
             <a href="{{ route('projects.create') }}" class="btn-primary">＋ Nouveau projet</a>
         </div>
 
         @if (session('success'))
-            <div class="alert alert-success">✅ {{ session('success') }}</div>
+            <div class="alert alert-success"> {{ session('success') }}</div>
         @endif
 
         @if ($projects->isEmpty())
             <div class="empty-state">
-                <span class="empty-icon">🗂️</span>
+                <span class="empty-icon"></span>
                 <p class="empty-title">Aucun projet pour l'instant</p>
                 <p class="empty-text">Commence par créer ton premier projet.</p>
                 <a href="{{ route('projects.create') }}" class="btn-primary">＋ Créer mon premier projet</a>
@@ -26,26 +26,57 @@
         @else
             <div class="projects-grid">
                 @foreach ($projects as $project)
-                    <div class="project-card">
+                    @php
+                        $team = $project->teams->first();
+                        $total = $project->columns->sum(fn($c) => $c->tasks->count());
+                        $done = $project->columns->where('name', 'Terminé')->sum(fn($c) => $c->tasks->count());
+                        $progress = $total > 0 ? round(($done / $total) * 100) : 0;
+                    @endphp
+                    <div class="project-card" style="position:relative;">
 
-                        {{-- 'title' = vrai nom de la colonne en BDD --}}
-                        <h3 class="project-name">{{ $project->title }}</h3>
+                        {{-- Badge équipe en haut à gauche --}}
+                        @if ($team)
+                            <div style="position:absolute; top:14px; left:14px;">
+                                <span
+                                    style="background:rgba(99,102,241,0.15); color:#818CF8; border:1px solid rgba(99,102,241,0.3); padding:3px 10px; border-radius:20px; font-size:0.72rem; font-weight:700;">
+                                    Équipe : {{ $team->name }}
+                                </span>
+                            </div>
+                        @endif
+
+                        {{-- Titre avec marge si badge équipe --}}
+                        <h3 class="project-name" style="{{ $team ? 'margin-top:2rem;' : '' }}">
+                            {{ $project->title }}
+                        </h3>
 
                         <p class="project-description">
                             {{ $project->description ?? 'Aucune description.' }}
                         </p>
 
+                        {{-- Barre de progression --}}
+                        @if ($total > 0)
+                            <div style="margin-bottom:1rem;">
+                                <div
+                                    style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                    <span style="color:var(--text-muted); font-size:0.75rem;">Progression</span>
+                                    <span
+                                        style="color:var(--accent-1); font-size:0.75rem; font-weight:700;">{{ $progress }}%</span>
+                                </div>
+                                <div
+                                    style="background:rgba(255,255,255,0.05); border-radius:20px; height:5px; overflow:hidden;">
+                                    <div
+                                        style="background:var(--accent-grad); height:100%; width:{{ $progress }}%; border-radius:20px; transition:width 0.5s;">
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="project-meta">
-                            <span class="meta-badge">
-                                📝 {{ $project->columns->sum(fn($c) => $c->tasks->count()) }} tâches
-                            </span>
-                            @php
-                                $done = $project->columns->where('name', 'Terminé')->sum(fn($c) => $c->tasks->count());
-                            @endphp
+                            <span class="meta-badge">{{ $total }} tâches</span>
                             @if ($done > 0)
                                 <span class="meta-badge"
                                     style="background:rgba(16,185,129,0.1); color:#34D399; border-color:rgba(16,185,129,0.2);">
-                                    ✅ {{ $done }} terminées
+                                    {{ $done }} terminées
                                 </span>
                             @endif
                         </div>
@@ -56,8 +87,7 @@
                             <a href="{{ route('projects.edit', $project) }}" class="btn-secondary">✏️</a>
                             <form action="{{ route('projects.destroy', $project) }}" method="POST"
                                 onsubmit="return confirm('Supprimer ce projet ?')">
-                                @csrf
-                                @method('DELETE')
+                                @csrf @method('DELETE')
                                 <button type="submit" class="btn-danger">🗑️</button>
                             </form>
                         </div>

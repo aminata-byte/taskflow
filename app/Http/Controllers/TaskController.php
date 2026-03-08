@@ -9,13 +9,17 @@ use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
-    // ── CRÉER une tâche dans une colonne ──
+    private function authorizeColumn(Column $column): void
+    {
+        $user = Auth::user();
+        if ($user->isAdmin()) return;
+        abort_if($column->project->user_id !== $user->id, 403);
+    }
+
     public function store(Request $request, Column $column)
     {
-        // Vérifie que la colonne appartient à l'utilisateur connecté
-        abort_if($column->project->user_id !== Auth::id(), 403);
+        $this->authorizeColumn($column);
 
-        // Validation — priorité en français : basse / moyenne / haute
         $validated = $request->validate([
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -23,7 +27,6 @@ class TaskController extends Controller
             'priority'    => 'nullable|in:basse,moyenne,haute',
         ]);
 
-        // Créer la tâche associée à la colonne
         $column->tasks()->create([
             'title'       => $validated['title'],
             'description' => $validated['description'] ?? null,
@@ -34,20 +37,16 @@ class TaskController extends Controller
         return back()->with('success', 'Tâche ajoutée');
     }
 
-    // ── AFFICHER le formulaire de modification ──
     public function edit(Column $column, Task $task)
     {
         $columns = $column->project->columns;
-
         return view('tasks.edit', compact('task', 'column', 'columns'));
     }
 
-    // ── MODIFIER une tâche ──
     public function update(Request $request, Column $column, Task $task)
     {
-        abort_if($column->project->user_id !== Auth::id(), 403);
+        $this->authorizeColumn($column);
 
-        // Validation — priorité en français
         $validated = $request->validate([
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -56,18 +55,16 @@ class TaskController extends Controller
             'column_id'   => 'required|exists:columns,id',
         ]);
 
-        // Mettre à jour (peut changer de colonne)
         $task->update($validated);
 
         return redirect()
             ->route('projects.show', $column->project_id)
-            ->with('success', 'Tâche modifiée ');
+            ->with('success', 'Tâche modifiée');
     }
 
-    // ── SUPPRIMER une tâche ──
     public function destroy(Column $column, Task $task)
     {
-        abort_if($column->project->user_id !== Auth::id(), 403);
+        $this->authorizeColumn($column);
 
         $projectId = $column->project_id;
         $task->delete();

@@ -16,7 +16,7 @@
         {{-- En-tête --}}
         <div class="page-header" style="margin-bottom: 1.5rem;">
             <div>
-                <h1 class="page-title">✨ Nouveau projet</h1>
+                <h1 class="page-title"> Nouveau projet</h1>
                 <p class="page-subtitle">Les colonnes "À faire", "En cours" et "Terminé" seront créées automatiquement.</p>
             </div>
         </div>
@@ -38,7 +38,7 @@
                             placeholder="Ex: Refonte du site web" required autofocus>
                         {{-- Afficher l'erreur de validation --}}
                         @error('name')
-                            <div class="invalid-feedback">⚠️ {{ $message }}</div>
+                            <div class="invalid-feedback"> {{ $message }}</div>
                         @enderror
                     </div>
 
@@ -53,7 +53,7 @@
                     {{-- Boutons --}}
                     <div style="display:flex; gap:12px; margin-top:0.5rem;">
                         <button type="submit" class="btn-primary" style="flex:1; justify-content:center;">
-                            ✨ Créer le projet
+                             Créer le projet
                         </button>
                         <a href="{{ route('projects.index') }}" class="btn-secondary">
                             Annuler
@@ -66,7 +66,7 @@
             {{-- Info box : colonnes auto-créées --}}
             <div class="card"
                 style="margin-top:1.25rem; display:flex; gap:1rem; align-items:flex-start; padding:1.25rem;">
-                <span style="font-size:1.5rem;">💡</span>
+                <span style="font-size:1.5rem;"></span>
                 <div>
                     <p style="font-weight:600; font-size:0.9rem; margin-bottom:0.25rem; color:var(--text-primary);">Colonnes
                         créées automatiquement</p>

@@ -10,37 +10,31 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    // ── Champs que l'on peut remplir (mass assignment) ──
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',         // ← on ajoute le rôle
+    protected $fillable = ['name', 'email', 'password', 'role'];
+
+    protected $hidden = ['password', 'remember_token'];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password'          => 'hashed',
     ];
 
-    // ── Champs cachés (jamais envoyés en JSON) ──
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    // ── Conversions automatiques des types ──
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password'          => 'hashed',
-        ];
-    }
-
-    // ── Un utilisateur possède plusieurs projets ──
     public function projects()
     {
         return $this->hasMany(Project::class);
     }
 
-    // ── Vérifier si l'utilisateur est admin ──
-    public function isAdmin()
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'team_members');
+    }
+
+    public function assignedTasks()
+    {
+        return $this->hasMany(Task::class, 'assigned_to');
+    }
+
+    public function isAdmin(): bool
     {
         return $this->role === 'admin';
     }

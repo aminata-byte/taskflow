@@ -31,7 +31,7 @@
                             class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}"
                             value="{{ old('name', $project->title) }}" required autofocus>
                         @error('name')
-                            <div class="invalid-feedback">⚠️ {{ $message }}</div>
+                            <div class="invalid-feedback"> {{ $message }}</div>
                         @enderror
                     </div>
 
@@ -45,7 +45,7 @@
 
                     <div style="display:flex; gap:12px;">
                         <button type="submit" class="btn-primary" style="flex:1; justify-content:center;">
-                            💾 Enregistrer
+                             Enregistrer
                         </button>
                         <a href="{{ route('projects.show', $project) }}" class="btn-secondary">Annuler</a>
                     </div>
@@ -57,7 +57,7 @@
                 style="margin-top:1.25rem; border-color:rgba(239,68,68,0.25); background:rgba(239,68,68,0.05);">
                 <h3
                     style="font-family:'Sora',sans-serif; font-size:0.95rem; font-weight:700; color:#F87171; margin-bottom:0.5rem;">
-                    ⚠️ Zone de danger
+                     Zone de danger
                 </h3>
                 <p style="font-size:0.875rem; color:var(--text-secondary); margin-bottom:1rem;">
                     Supprimer ce projet supprimera toutes ses colonnes et tâches.
