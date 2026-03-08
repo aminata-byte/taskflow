@@ -38,7 +38,7 @@
                     onmouseout="this.style.borderColor='{{ $hasTeam ? 'rgba(99,102,241,0.4)' : 'var(--border)' }}'; this.style.transform='translateY(0)'; this.style.boxShadow='none';"
                     {{ !$hasTeam ? 'onclick=event.preventDefault()' : '' }}>
 
-                    <div style="font-size:3rem;">👫</div>
+                    <div style="font-size:3rem;"></div>
                     <div style="text-align:center;">
                         <div
                             style="font-family:'Sora',sans-serif; font-size:1.2rem; font-weight:700; color:var(--text-primary); margin-bottom:0.5rem;">
@@ -51,7 +51,7 @@
                     @if ($hasTeam)
                         <span
                             style="background:var(--accent-grad); color:white; padding:4px 14px; border-radius:20px; font-size:0.78rem; font-weight:700;">
-                            Disponible ✅
+                            Disponible
                         </span>
                     @else
                         <span
@@ -70,7 +70,7 @@
                     onmouseover="this.style.borderColor='rgba(16,185,129,0.7)'; this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 40px rgba(16,185,129,0.15)';"
                     onmouseout="this.style.borderColor='rgba(16,185,129,0.3)'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
 
-                    <div style="font-size:3rem;">🏠</div>
+                    <div style="font-size:3rem;"></div>
                     <div style="text-align:center;">
                         <div
                             style="font-family:'Sora',sans-serif; font-size:1.2rem; font-weight:700; color:var(--text-primary); margin-bottom:0.5rem;">

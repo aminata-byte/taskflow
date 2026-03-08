@@ -24,7 +24,7 @@
         </div>
 
         @if (session('success'))
-            <div class="alert alert-success" style="max-width:500px;">✅ {{ session('success') }}</div>
+            <div class="alert alert-success" style="max-width:500px;"> {{ session('success') }}</div>
         @endif
 
         @php
@@ -80,11 +80,11 @@
         <div style="display:flex; gap:10px; margin-bottom:1.5rem;">
             <button onclick="showTab('taches')" id="tab-taches"
                 style="padding:10px 28px; border-radius:30px; border:2px solid rgba(99,102,241,0.5); background:var(--accent-grad); color:white; font-weight:700; font-size:0.95rem; cursor:pointer;">
-                📋 Tâches
+                Tâches
             </button>
             <button onclick="showTab('membres')" id="tab-membres"
                 style="padding:10px 28px; border-radius:30px; border:2px solid var(--border); background:transparent; color:var(--text-secondary); font-weight:700; font-size:0.95rem; cursor:pointer;">
-                👥 Membres
+                Membres
             </button>
         </div>
 
@@ -104,9 +104,9 @@
                         style="flex:2; min-width:180px; background:var(--bg-column); border:1px solid var(--border); border-radius:10px; padding:10px 14px; color:var(--text-primary); font-size:0.9rem;">
                     <select name="priority"
                         style="flex:1; min-width:140px; background:var(--bg-column); border:1px solid var(--border); border-radius:10px; padding:10px 14px; color:var(--text-primary); font-size:0.9rem;">
-                        <option value="basse">🟢 Basse</option>
-                        <option value="moyenne">🟡 Moyenne</option>
-                        <option value="haute">🔴 Haute</option>
+                        <option value="basse"> Basse</option>
+                        <option value="moyenne"> Moyenne</option>
+                        <option value="haute"> Haute</option>
                     </select>
                     <input type="date" name="due_date"
                         style="flex:1; min-width:140px; background:var(--bg-column); border:1px solid var(--border); border-radius:10px; padding:10px 14px; color:var(--text-muted); font-size:0.9rem;">
@@ -154,9 +154,9 @@
                                     default => 'rgba(99,102,241,0.12)',
                                 };
                                 $stateIcon = match ($colName) {
-                                    'Terminé' => '✅',
-                                    'En cours' => '⚡',
-                                    default => '📋',
+                                    'Terminé' => '',
+                                    'En cours' => '',
+                                    default => '',
                                 };
                                 $prioColor = match ($task->priority ?? 'basse') {
                                     'haute' => '#EF4444',
@@ -191,12 +191,28 @@
                                     @endif
                                 </td>
 
-                                {{-- Assigné --}}
-                                <td style="padding:14px 16px;">
-                                    @if ($task->assignedUser)
+                                {{-- Assigné à — combobox si admin + équipe, sinon nom --}}
+                                <td style="padding:10px 16px;">
+                                    @if (Auth::user()->isAdmin() && $team)
+                                        <form action="{{ route('admin.teams.assign-task') }}" method="POST"
+                                            style="display:flex; align-items:center; gap:6px;">
+                                            @csrf
+                                            <input type="hidden" name="task_id" value="{{ $task->id }}">
+                                            <select name="user_id" onchange="this.form.submit()"
+                                                style="background:var(--bg-column); border:1px solid var(--border); border-radius:8px; padding:5px 10px; color:var(--text-primary); font-size:0.82rem; cursor:pointer; min-width:130px;">
+                                                <option value="">— Choisir —</option>
+                                                @foreach ($team->members as $m)
+                                                    <option value="{{ $m->id }}"
+                                                        {{ $task->assigned_to == $m->id ? 'selected' : '' }}>
+                                                        {{ $m->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </form>
+                                    @elseif ($task->assignedUser)
                                         <div style="display:flex; align-items:center; gap:7px;">
                                             <div
-                                                style="width:26px; height:26px; background:var(--accent-grad); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:700; flex-shrink:0;">
+                                                style="width:26px; height:26px; background:var(--accent-grad); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:700; flex-shrink:0; color:white;">
                                                 {{ strtoupper(substr($task->assignedUser->name, 0, 1)) }}
                                             </div>
                                             <span
@@ -231,16 +247,7 @@
 
                                 {{-- Actions --}}
                                 <td style="padding:14px 16px; text-align:center;">
-                                    <div
-                                        style="display:flex; gap:6px; justify-content:center; align-items:center; flex-wrap:wrap;">
-                                        {{-- Bouton assigner (admin uniquement, si équipe existe) --}}
-                                        @if (Auth::user()->isAdmin() && $team)
-                                            <button
-                                                onclick="openAssign({{ $task->id }}, '{{ addslashes($task->title) }}')"
-                                                style="background:rgba(99,102,241,0.15); color:#818CF8; border:1px solid rgba(99,102,241,0.3); padding:4px 10px; border-radius:8px; font-size:0.78rem; cursor:pointer; white-space:nowrap;">
-                                                👤 Assigner
-                                            </button>
-                                        @endif
+                                    <div style="display:flex; gap:6px; justify-content:center; align-items:center;">
                                         @if ($col)
                                             <a href="{{ route('columns.tasks.edit', [$col, $task]) }}"
                                                 class="task-btn edit" title="Modifier">✏️</a>
@@ -285,13 +292,13 @@
                     <div class="card" style="margin-bottom:1.5rem; border:1px solid rgba(245,158,11,0.3);">
                         <h3
                             style="font-family:'Sora',sans-serif; font-size:1rem; font-weight:700; color:#FBBF24; margin-bottom:1rem;">
-                            ⚠️ {{ $unassignedTasks->count() }} tâche(s) non assignée(s)
+                            {{ $unassignedTasks->count() }} tâche(s) non assignée(s)
                         </h3>
                         <div style="display:flex; flex-wrap:wrap; gap:8px;">
                             @foreach ($unassignedTasks as $task)
                                 <span
                                     style="background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); color:#FBBF24; padding:4px 12px; border-radius:20px; font-size:0.82rem;">
-                                    📋 {{ $task->title }}
+                                    {{ $task->title }}
                                 </span>
                             @endforeach
                         </div>
@@ -320,7 +327,7 @@
                         <div class="card" style="padding:1.5rem;">
                             <div style="display:flex; align-items:center; gap:12px; margin-bottom:1rem;">
                                 <div
-                                    style="width:44px; height:44px; background:var(--accent-grad); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.1rem; flex-shrink:0;">
+                                    style="width:44px; height:44px; background:var(--accent-grad); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.1rem; flex-shrink:0; color:white;">
                                     {{ strtoupper(substr($member->name, 0, 1)) }}
                                 </div>
                                 <div>
@@ -378,7 +385,7 @@
                                             <span style="font-size:0.85rem; font-weight:500;">{{ $task->title }}</span>
                                             <div style="display:flex; gap:5px; align-items:center; flex-shrink:0;">
                                                 @if ($tLate)
-                                                    <span style="color:#F87171; font-size:0.72rem;">🔥</span>
+                                                    <span style="color:#F87171; font-size:0.72rem;"></span>
                                                 @endif
                                                 <span
                                                     style="color:{{ $tColor }}; font-size:0.72rem; font-weight:700; white-space:nowrap;">{{ $tState }}</span>
@@ -401,7 +408,7 @@
                                         @endforeach
                                     </select>
                                     <button type="submit" class="btn-primary"
-                                        style="padding:8px 14px; white-space:nowrap;">✅</button>
+                                        style="padding:8px 14px; white-space:nowrap;"></button>
                                 </form>
                             @endif
                         </div>
@@ -411,36 +418,6 @@
         </div>
 
     </div>
-
-    {{-- MODAL ASSIGNATION (onglet Tâches) --}}
-    @if (Auth::user()->isAdmin() && $team)
-        <div id="assignModal"
-            style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center;">
-            <div
-                style="background:var(--bg-card); border-radius:16px; padding:2rem; min-width:350px; border:1px solid var(--border); box-shadow:0 20px 60px rgba(0,0,0,0.5);">
-                <h3 style="font-family:'Sora',sans-serif; font-weight:700; margin-bottom:0.5rem;">👤 Assigner la tâche</h3>
-                <p id="assignTaskTitle" style="color:var(--text-secondary); font-size:0.875rem; margin-bottom:1.5rem;">
-                </p>
-                <form action="{{ route('admin.teams.assign-task') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="task_id" id="assignTaskId">
-                    <div class="form-group">
-                        <label class="form-label">Choisir un membre</label>
-                        <select name="user_id" class="form-control" required>
-                            <option value="">-- Sélectionner --</option>
-                            @foreach ($team->members as $member)
-                                <option value="{{ $member->id }}">{{ $member->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div style="display:flex; gap:10px; margin-top:1.5rem;">
-                        <button type="submit" class="btn-primary"> Assigner</button>
-                        <button type="button" onclick="closeAssign()" class="btn-secondary">Annuler</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    @endif
 
 @endsection
 
@@ -463,19 +440,5 @@
                     'padding:10px 28px; border-radius:30px; border:2px solid var(--border); background:transparent; color:var(--text-secondary); font-weight:700; font-size:0.95rem; cursor:pointer;';
             }
         }
-
-        function openAssign(taskId, taskTitle) {
-            document.getElementById('assignTaskId').value = taskId;
-            document.getElementById('assignTaskTitle').textContent = taskTitle;
-            document.getElementById('assignModal').style.display = 'flex';
-        }
-
-        function closeAssign() {
-            document.getElementById('assignModal').style.display = 'none';
-        }
-
-        document.getElementById('assignModal')?.addEventListener('click', function(e) {
-            if (e.target === this) closeAssign();
-        });
     </script>
 @endpush

@@ -51,6 +51,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // routes personnalisées AVANT les resources
     Route::post('users/assign-team', [App\Http\Controllers\Admin\UserController::class, 'assignTeam'])->name('users.assign-team');
+    Route::post('users/remove-team', [App\Http\Controllers\Admin\UserController::class, 'removeTeam'])->name('users.remove-team');
     Route::resource('users', App\Http\Controllers\Admin\UserController::class)->only(['index', 'create', 'store', 'destroy']);
 
     Route::post('teams/assign-task', [App\Http\Controllers\Admin\TeamController::class, 'assignTask'])->name('teams.assign-task');

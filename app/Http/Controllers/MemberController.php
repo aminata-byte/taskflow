@@ -8,46 +8,61 @@ use Illuminate\Http\Request;
 
 class MemberController extends Controller
 {
-    // Espace equipe : taches assignees au membre
+    // Espace équipe : tâches assignées au membre (tous ses projets)
     public function teamSpace()
     {
         $user = auth()->user();
 
-        // Recuperer l'equipe du membre
-        $team = $user->teams()->with(['project.columns.tasks.assignedUser', 'members'])->first();
+        // Toutes les équipes du membre
+        $teams = $user->teams()->with(['project.columns.tasks.assignedUser', 'members'])->get();
 
-        if (!$team) {
+        if ($teams->isEmpty()) {
             return redirect()->route('workspace.choose')
                 ->withErrors(['error' => "Vous n'êtes membre d'aucune équipe."]);
         }
 
-        // Taches assignees a ce membre, groupees par colonne
-        $myTasks = Task::where('assigned_to', $user->id)
-            ->with('column')
-            ->get()
-            ->groupBy('column_id');
+        // Pour chaque équipe, préparer les données
+        $workspaces = $teams->map(function ($team) use ($user) {
+            if (!$team->project) return null;
 
-        // Colonnes du projet de l'equipe
-        $columns = $team->project->columns->keyBy('id');
+            $columns   = $team->project->columns->keyBy('id');
+            $columnIds = $columns->keys();
 
-        // Taches des autres membres de l'equipe (lecture seule)
-        $teamTasks = [];
-        foreach ($team->members as $member) {
-            if ($member->id !== $user->id) {
-                $teamTasks[$member->id] = [
-                    'user'  => $member,
-                    'tasks' => Task::where('assigned_to', $member->id)
-                        ->with('column')
-                        ->get()
-                        ->groupBy('column_id'),
-                ];
+            // Mes tâches dans CE projet uniquement
+            $myTasks = Task::where('assigned_to', $user->id)
+                ->whereIn('column_id', $columnIds)
+                ->with('column')
+                ->get()
+                ->groupBy('column_id');
+
+            // Tâches des autres membres de cette équipe (lecture seule)
+            $teamTasks = [];
+            foreach ($team->members as $member) {
+                if ($member->id !== $user->id) {
+                    $teamTasks[$member->id] = [
+                        'user'  => $member,
+                        'tasks' => Task::where('assigned_to', $member->id)
+                            ->whereIn('column_id', $columnIds)
+                            ->with('column')
+                            ->get()
+                            ->groupBy('column_id'),
+                    ];
+                }
             }
-        }
 
-        return view('member.team-space', compact('team', 'myTasks', 'columns', 'teamTasks'));
+            return [
+                'team'      => $team,
+                'project'   => $team->project,
+                'columns'   => $columns,
+                'myTasks'   => $myTasks,
+                'teamTasks' => $teamTasks,
+            ];
+        })->filter()->values(); // retire les null (équipes sans projet)
+
+        return view('member.team-space', compact('workspaces', 'user'));
     }
 
-    // Deplacer une tache (drag & drop)
+    // Déplacer une tâche (drag & drop)
     public function moveTask(Request $request)
     {
         $request->validate([
@@ -57,7 +72,7 @@ class MemberController extends Controller
 
         $task = Task::findOrFail($request->task_id);
 
-        // Verifier que la tache appartient bien a ce membre
+        // Vérifier que la tâche appartient bien à ce membre
         if ($task->assigned_to !== auth()->id()) {
             return response()->json(['error' => 'Non autorisé'], 403);
         }

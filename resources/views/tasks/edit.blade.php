@@ -37,7 +37,7 @@
                             class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}"
                             value="{{ old('title', $task->title) }}" required autofocus placeholder="Titre de la tâche...">
                         @error('title')
-                            <div class="invalid-feedback">⚠️ {{ $message }}</div>
+                            <div class="invalid-feedback"> {{ $message }}</div>
                         @enderror
                     </div>
 
@@ -55,12 +55,12 @@
                     <div class="form-group">
                         <label class="form-label" for="priority">Priorité</label>
                         <select id="priority" name="priority" class="form-control">
-                            <option value="basse" {{ old('priority', $task->priority) === 'basse' ? 'selected' : '' }}>🟢
+                            <option value="basse" {{ old('priority', $task->priority) === 'basse' ? 'selected' : '' }}>
                                 Basse</option>
                             <option value="moyenne" {{ old('priority', $task->priority) === 'moyenne' ? 'selected' : '' }}>
-                                🟡 Moyenne</option>
+                                Moyenne</option>
                             <option value="haute" {{ old('priority', $task->priority) === 'haute' ? 'selected' : '' }}>
-                                🔴 Haute</option>
+                                Haute</option>
                         </select>
                     </div>
 

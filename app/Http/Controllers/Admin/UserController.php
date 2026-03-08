@@ -60,9 +60,9 @@ class UserController extends Controller
         ]);
 
         $user = \App\Models\User::find($request->user_id);
-        $user->teams()->sync([$request->team_id]);
+        $user->teams()->syncWithoutDetaching([$request->team_id]);
 
-        return back()->with('success', 'Équipe changée avec succès !');
+        return back()->with('success', 'Membre ajouté à l\'équipe !');
     }
 
     public function destroy(User $user)
