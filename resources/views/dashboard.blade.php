@@ -16,25 +16,25 @@
         <div class="stats-grid">
             <div class="stat-card">
                 <div>
-                    <div class="stat-value" style="color:#6366F1;">{{ $totalProjects }}</div>
+                    <div class="stat-value">{{ $totalProjects }}</div>
                     <div class="stat-label">Projets actifs</div>
                 </div>
             </div>
             <div class="stat-card">
                 <div>
-                    <div class="stat-value" style="color:#06B6D4;">{{ $totalTasks }}</div>
+                    <div class="stat-value">{{ $totalTasks }}</div>
                     <div class="stat-label">Tâches totales</div>
                 </div>
             </div>
             <div class="stat-card">
                 <div>
-                    <div class="stat-value" style="color:#10B981;">{{ $doneTasks }}</div>
+                    <div class="stat-value">{{ $doneTasks }}</div>
                     <div class="stat-label">Terminées</div>
                 </div>
             </div>
             <div class="stat-card">
                 <div>
-                    <div class="stat-value" style="color:#F59E0B;">{{ $inProgressTasks }}</div>
+                    <div class="stat-value">{{ $inProgressTasks }}</div>
                     <div class="stat-label">En cours</div>
                 </div>
             </div>
@@ -50,7 +50,7 @@
         <div style="margin-top:2.5rem;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
                 <h2 style="font-family:'Sora',sans-serif; font-size:1.2rem; font-weight:700;">Projets récents</h2>
-                <a href="{{ route('projects.index') }}" class="btn-secondary" style="font-size:0.85rem;">Voir tous →</a>
+                <a href="{{ route('projects.index') }}" class="btn-secondary" style="font-size:0.85rem;">Voir tous</a>
             </div>
 
             @if ($recentProjects->isEmpty())
@@ -71,7 +71,6 @@
                             <h3 class="project-name">{{ $project->title }}</h3>
                             <p class="project-description">{{ $project->description ?? 'Aucune description.' }}</p>
 
-                            {{-- Barre de progression --}}
                             @if ($total > 0)
                                 <div style="margin-bottom:1rem;">
                                     <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
@@ -101,7 +100,7 @@
                             <div class="project-actions">
                                 <a href="{{ route('projects.show', $project) }}" class="btn-primary"
                                     style="flex:1; justify-content:center;">
-                                    Ouvrir →
+                                    Ouvrir
                                 </a>
                             </div>
                         </div>

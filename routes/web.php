@@ -49,7 +49,6 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\AdminController::class, 'index'])->name('dashboard');
 
-    // routes personnalisées AVANT les resources
     Route::post('users/assign-team', [App\Http\Controllers\Admin\UserController::class, 'assignTeam'])->name('users.assign-team');
     Route::post('users/remove-team', [App\Http\Controllers\Admin\UserController::class, 'removeTeam'])->name('users.remove-team');
     Route::resource('users', App\Http\Controllers\Admin\UserController::class)->only(['index', 'create', 'store', 'destroy']);
@@ -65,4 +64,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/workspace', [App\Http\Controllers\WorkspaceController::class, 'choose'])->name('workspace.choose');
     Route::get('/member/team-space', [App\Http\Controllers\MemberController::class, 'teamSpace'])->name('member.team-space');
     Route::post('/member/move-task', [App\Http\Controllers\MemberController::class, 'moveTask'])->name('member.move-task');
+
+    // Déplacement de tâche espace personnel (sans vérification assigned_to)
+    Route::post('/projects/move-task', [App\Http\Controllers\ProjectController::class, 'moveTask'])->name('projects.move-task');
 });

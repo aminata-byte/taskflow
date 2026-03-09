@@ -14,7 +14,8 @@ class ProjectController extends Controller
         $user = Auth::user();
 
         if ($user->isAdmin()) {
-            $projects = Project::with(['columns.tasks', 'teams'])->latest()->get();
+            // Admin : uniquement les projets avec une équipe (pas les projets personnels des membres)
+            $projects = Project::has('teams')->with(['columns.tasks', 'teams'])->latest()->get();
         } else {
             $projects = Project::where('user_id', $user->id)
                 ->with(['columns.tasks', 'teams'])
@@ -117,5 +118,24 @@ class ProjectController extends Controller
         return redirect()
             ->route('projects.index')
             ->with('success', 'Projet supprimé. 🗑️');
+    }
+    public function moveTask(Request $request)
+    {
+        $request->validate([
+            'task_id'   => 'required|exists:tasks,id',
+            'column_id' => 'required|exists:columns,id',
+        ]);
+
+        $task   = \App\Models\Task::findOrFail($request->task_id);
+        $column = \App\Models\Column::findOrFail($request->column_id);
+
+        // Vérifier que la colonne appartient à un projet de l'utilisateur
+        if ($column->project->user_id !== auth()->id()) {
+            return response()->json(['error' => 'Non autorisé'], 403);
+        }
+
+        $task->update(['column_id' => $request->column_id]);
+
+        return response()->json(['success' => true]);
     }
 }
