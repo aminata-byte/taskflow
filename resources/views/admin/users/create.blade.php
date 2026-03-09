@@ -9,7 +9,7 @@
                     <h1 class="page-title"> Nouveau membre</h1>
                     <p class="page-subtitle">Créer un compte et assigner à une équipe</p>
                 </div>
-                <a href="{{ route('admin.users.index') }}" class="btn-secondary">← Retour</a>
+                <a href="{{ route('admin.users.index') }}" class="btn-secondary">Retour</a>
             </div>
 
             @if ($errors->any())
@@ -56,9 +56,9 @@
                     {{-- Assigner à une équipe (combobox) --}}
                     <div style="border-top:1px solid var(--border); margin:1.5rem 0; padding-top:1.5rem;">
                         <div class="form-group">
-                            <label class="form-label">👫 Assigner à une équipe</label>
+                            <label class="form-label"> Assigner à une équipe</label>
                             <select name="team_id" class="form-control">
-                                <option value="">-- Aucune équipe (assigner plus tard) --</option>
+                                <option value=""> Aucune équipe (optionnel)</option>
                                 @foreach ($teams as $team)
                                     <option value="{{ $team->id }}" {{ old('team_id') == $team->id ? 'selected' : '' }}>
                                         {{ $team->name }} — {{ $team->project?->title ?? 'Sans projet' }}
@@ -69,8 +69,7 @@
                             @error('team_id')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <p style="color:var(--text-muted); font-size:0.78rem; margin-top:6px;">Optionnel — vous pouvez
-                                assigner l'équipe plus tard</p>
+
                         </div>
                     </div>
 

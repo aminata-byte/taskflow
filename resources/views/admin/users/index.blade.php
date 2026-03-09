@@ -12,7 +12,7 @@
         </div>
 
         @if (session('success'))
-            <div class="alert alert-success">✅ {{ session('success') }}</div>
+            <div class="alert alert-success"> {{ session('success') }}</div>
         @endif
 
         <div class="card">
@@ -72,7 +72,7 @@
                                         @endforeach
                                     </div>
                                 @else
-                                    <span style="color:#EF4444; font-size:0.78rem; font-weight:600;">⚠️ Non assigné</span>
+                                    <span style="color:#EF4444; font-size:0.78rem; font-weight:600;"> Non assigné</span>
                                 @endif
                             </td>
 
@@ -84,7 +84,7 @@
                                             @if ($t->project)
                                                 <a href="{{ route('projects.show', $t->project) }}"
                                                     style="color:var(--accent-1); font-size:0.82rem; font-weight:600; text-decoration:none;">
-                                                    📁 {{ $t->project->title }}
+                                                    {{ $t->project->title }}
                                                 </a>
                                             @endif
                                         @endforeach
@@ -163,13 +163,13 @@
                         <option value="">-- Sélectionner une équipe --</option>
                         @foreach ($teams as $team)
                             <option value="{{ $team->id }}">
-                                {{ $team->name }} — 📁 {{ $team->project?->title ?? 'Sans projet' }}
+                                {{ $team->name }} — {{ $team->project?->title ?? 'Sans projet' }}
                             </option>
                         @endforeach
                     </select>
                 </div>
                 <div style="display:flex; gap:10px; margin-top:1.5rem;">
-                    <button type="submit" class="btn-primary">✅ Ajouter</button>
+                    <button type="submit" class="btn-primary">Ajouter</button>
                     <button type="button" onclick="closeAssignTeam()" class="btn-secondary">Annuler</button>
                 </div>
             </form>

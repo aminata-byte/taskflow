@@ -14,8 +14,9 @@ class ProjectController extends Controller
         $user = Auth::user();
 
         if ($user->isAdmin()) {
-            // Admin : uniquement les projets avec une équipe (pas les projets personnels des membres)
-            $projects = Project::has('teams')->with(['columns.tasks', 'teams'])->latest()->get();
+            // Admin : seulement les projets créés par l'admin (pas les projets personnels des membres)
+            $projects = Project::where('user_id', $user->id)
+                ->with(['columns.tasks', 'teams'])->latest()->get();
         } else {
             $projects = Project::where('user_id', $user->id)
                 ->with(['columns.tasks', 'teams'])
@@ -68,6 +69,8 @@ class ProjectController extends Controller
 
         $project->load([
             'columns.tasks.assignedUser',
+            'columns.tasks.column',
+            'columns.tasks.notes',
             'teams.members.assignedTasks.column',
         ]);
 

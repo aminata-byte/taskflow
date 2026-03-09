@@ -4,21 +4,13 @@
 @section('content')
     <div class="page-container">
 
-        {{-- Breadcrumb --}}
-        <div class="breadcrumb">
-            <a href="{{ route('projects.index') }}">Projets</a>
-            <span class="separator">›</span>
-            {{-- 'title' = vrai nom de la colonne en BDD --}}
-            <a href="{{ route('projects.show', $column->project) }}">{{ $column->project->title }}</a>
-            <span class="separator">›</span>
-            <span>Modifier la tâche</span>
-        </div>
+
 
         {{-- En-tête --}}
         <div class="page-header" style="margin-bottom:1.5rem;">
             <div>
-                <h1 class="page-title">✏️ Modifier la tâche</h1>
-                <p class="page-subtitle">Colonne actuelle : <strong>{{ $column->name }}</strong></p>
+                <h1 class="page-title">Modifier la tâche</h1>
+                <p class="page-subtitle">Colonne actuel: <strong>{{ $column->name }}</strong></p>
             </div>
         </div>
 
@@ -89,7 +81,7 @@
                     {{-- Boutons --}}
                     <div style="display:flex; gap:12px; margin-top:0.5rem;">
                         <button type="submit" class="btn-primary" style="flex:1; justify-content:center;">
-                            💾 Enregistrer
+                            Enregistrer
                         </button>
                         <a href="{{ route('projects.show', $column->project) }}" class="btn-secondary">
                             Annuler

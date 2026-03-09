@@ -9,7 +9,7 @@
                     <h1 class="page-title"> Nouvelle équipe</h1>
                     <p class="page-subtitle">Créer une équipe et assigner des membres</p>
                 </div>
-                <a href="{{ route('admin.teams.index') }}" class="btn-secondary">← Retour</a>
+                <a href="{{ route('admin.teams.index') }}" class="btn-secondary">Retour</a>
             </div>
 
             @if ($errors->any())
@@ -37,7 +37,7 @@
                     <div class="form-group">
                         <label class="form-label">Projet assigné *</label>
                         <select name="project_id" class="form-control" required>
-                            <option value="">-- Choisir un projet --</option>
+                            <option value="">Choisir un projet</option>
                             @foreach ($projects as $project)
                                 <option value="{{ $project->id }}"
                                     {{ old('project_id') == $project->id ? 'selected' : '' }}>

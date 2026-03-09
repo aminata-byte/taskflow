@@ -278,7 +278,7 @@
                                             {{ Str::limit($task->description, 60) }}</div>
                                     @endif
                                     @if ($isOverdue)
-                                        <span style="color:#F87171; font-size:0.72rem; font-weight:700;">🔥 En
+                                        <span style="color:#F87171; font-size:0.72rem; font-weight:700;"> En
                                             retard</span>
                                     @endif
                                 </td>
@@ -376,7 +376,7 @@
             <div id="panel-membres" style="display:none;">
                 @if (!$team)
                     <div class="empty-state">
-                        <span class="empty-icon">👥</span>
+
                         <h3 class="empty-title">Aucune équipe assignée à ce projet</h3>
                         @if (Auth::user()->isAdmin())
                             <a href="{{ route('admin.teams.create') }}" class="btn-primary">+ Créer une équipe</a>

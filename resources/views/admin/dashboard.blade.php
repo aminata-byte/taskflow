@@ -17,32 +17,32 @@
         {{-- Stats globales --}}
         <div class="stats-grid" style="margin-bottom:2rem;">
             <div class="stat-card">
-                <div class="stat-value" style="color:#6366F1;">{{ $totalUsers }}</div>
+                <div class="stat-value">{{ $totalUsers }}</div>
                 <div class="stat-label">Membres</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" style="color:#06B6D4;">{{ $totalProjects }}</div>
+                <div class="stat-value">{{ $totalProjects }}</div>
                 <div class="stat-label">Projets</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" style="color:#F59E0B;">{{ $totalTeams }}</div>
+                <div class="stat-value">{{ $totalTeams }}</div>
                 <div class="stat-label">Équipes</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" style="color:#10B981;">{{ $tasksDone }}</div>
+                <div class="stat-value">{{ $tasksDone }}</div>
                 <div class="stat-label">Tâches terminées</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" style="color:#F59E0B;">{{ $tasksInProgress }}</div>
+                <div class="stat-value">{{ $tasksInProgress }}</div>
                 <div class="stat-label">En cours</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" style="color:#6366F1;">{{ $tasksTodo }}</div>
+                <div class="stat-value">{{ $tasksTodo }}</div>
                 <div class="stat-label">À faire</div>
             </div>
             <div class="stat-card" style="border-color:rgba(239,68,68,0.3);">
                 <div class="stat-value" style="color:#EF4444;">{{ $tasksLate }}</div>
-                <div class="stat-label" style="color:#F87171;">En retard</div>
+                <div class="stat-label">En retard</div>
             </div>
         </div>
 
@@ -75,16 +75,13 @@
                     </thead>
                     <tbody>
                         @foreach ($lateTasks as $task)
-                            @php
-                                $daysLate = (int) \Carbon\Carbon::parse($task->due_date)->diffInDays(now());
-                            @endphp
+                            @php $daysLate = (int) \Carbon\Carbon::parse($task->due_date)->diffInDays(now()); @endphp
                             <tr style="border-bottom:1px solid var(--border);"
                                 onmouseover="this.style.background='rgba(239,68,68,0.04)'"
                                 onmouseout="this.style.background='transparent'">
                                 <td style="padding:12px 14px; font-weight:600; font-size:0.88rem;">{{ $task->title }}</td>
                                 <td style="padding:12px 14px; font-size:0.85rem; color:var(--text-secondary);">
-                                    {{ $task->assignedUser?->name ?? '— Non assigné' }}
-                                </td>
+                                    {{ $task->assignedUser?->name ?? '— Non assigné' }}</td>
                                 <td style="padding:12px 14px; font-size:0.85rem;">
                                     @if ($task->column?->project)
                                         <a href="{{ route('projects.show', $task->column->project) }}"
@@ -119,8 +116,8 @@
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
                     <h2 style="font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:700;">Progression des membres
                     </h2>
-                    <a href="{{ route('admin.users.index') }}" style="color:var(--accent-1); font-size:0.85rem;">Voir tous
-                        →</a>
+                    <a href="{{ route('admin.users.index') }}" style="color:var(--accent-1); font-size:0.85rem;">Voir
+                        tous</a>
                 </div>
 
                 @forelse($members as $member)
@@ -142,13 +139,13 @@
                             </div>
                             <div style="display:flex; gap:6px; align-items:center;">
                                 <span
-                                    style="background:rgba(16,185,129,0.15); color:#34D399; padding:2px 8px; border-radius:20px; font-size:0.75rem; font-weight:700;"
+                                    style="background:rgba(255,255,255,0.06); color:var(--text-secondary); padding:2px 8px; border-radius:20px; font-size:0.75rem; font-weight:700;"
                                     title="Terminées">{{ $member->tasks_done }}</span>
                                 <span
-                                    style="background:rgba(245,158,11,0.15); color:#FBBF24; padding:2px 8px; border-radius:20px; font-size:0.75rem; font-weight:700;"
+                                    style="background:rgba(255,255,255,0.06); color:var(--text-secondary); padding:2px 8px; border-radius:20px; font-size:0.75rem; font-weight:700;"
                                     title="En cours">{{ $member->tasks_inprogress }}</span>
                                 <span
-                                    style="background:rgba(99,102,241,0.15); color:#818CF8; padding:2px 8px; border-radius:20px; font-size:0.75rem; font-weight:700;"
+                                    style="background:rgba(255,255,255,0.06); color:var(--text-secondary); padding:2px 8px; border-radius:20px; font-size:0.75rem; font-weight:700;"
                                     title="À faire">{{ $member->tasks_todo }}</span>
                                 @if (($member->tasks_late ?? 0) > 0)
                                     <span
