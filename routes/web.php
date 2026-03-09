@@ -67,4 +67,7 @@ Route::middleware('auth')->group(function () {
 
     // Déplacement de tâche espace personnel (sans vérification assigned_to)
     Route::post('/projects/move-task', [App\Http\Controllers\ProjectController::class, 'moveTask'])->name('projects.move-task');
+    // Notes de tâches
+    Route::get('/tasks/{task}/note', [App\Http\Controllers\TaskNoteController::class, 'show'])->name('tasks.note.show');
+    Route::post('/tasks/{task}/note', [App\Http\Controllers\TaskNoteController::class, 'save'])->name('tasks.note.save');
 });

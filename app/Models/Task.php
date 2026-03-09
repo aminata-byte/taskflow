@@ -31,4 +31,8 @@ class Task extends Model
     {
         return $this->due_date && $this->due_date->isPast();
     }
+    public function notes()
+    {
+        return $this->hasMany(\App\Models\TaskNote::class);
+    }
 }

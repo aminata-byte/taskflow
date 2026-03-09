@@ -22,7 +22,7 @@
         @endif
 
         @php
-            $allTasks = $project->columns->flatMap->tasks;
+            $allTasks = $project->columns->flatMap(fn($c) => $c->tasks->load('notes'));
             $total = $allTasks->count();
             $done = $project->columns->where('name', 'Terminé')->flatMap->tasks->count();
             $inprog = $project->columns->where('name', 'En cours')->flatMap->tasks->count();
@@ -180,7 +180,7 @@
                                                 @php $isLate = \Carbon\Carbon::parse($task->due_date)->isPast() && $column->name !== 'Terminé'; @endphp
                                                 <span
                                                     style="font-size:0.75rem; color:{{ $isLate ? '#F87171' : 'var(--text-muted)' }}">
-                                                    {{ $isLate ? '🔥' : '' }}
+                                                    {{ $isLate ? '' : '' }}
                                                     {{ \Carbon\Carbon::parse($task->due_date)->format('d/m/Y') }}
                                                 </span>
                                             @else
@@ -261,6 +261,7 @@
                                     default => 'rgba(16,185,129,0.12)',
                                 };
                                 $col = $task->column;
+                                $myNote = $task->notes->where('user_id', Auth::id())->first();
                             @endphp
                             <tr class="task-row" data-state="{{ $colName }}" data-task-id="{{ $task->id }}"
                                 data-overdue="{{ $isOverdue ? '1' : '0' }}"
@@ -341,6 +342,12 @@
                                                 <button type="submit" class="task-btn delete"
                                                     title="Supprimer">🗑️</button>
                                             </form>
+                                            @if ($isPersonal)
+                                                <a href="{{ route('tasks.note.show', $task) }}"
+                                                    style="background:{{ $myNote?->content ? 'rgba(99,102,241,0.2)' : 'rgba(255,255,255,0.05)' }}; border:1px solid {{ $myNote?->content ? 'rgba(99,102,241,0.5)' : 'var(--border)' }}; border-radius:8px; padding:5px 12px; font-size:0.78rem; font-weight:600; color:{{ $myNote?->content ? '#818CF8' : 'var(--text-muted)' }}; text-decoration:none; white-space:nowrap;">
+                                                    {{ $myNote?->content ? 'Voir note ✓' : 'Voir note' }}
+                                                </a>
+                                            @endif
                                         @endif
                                     </div>
                                 </td>
@@ -349,7 +356,7 @@
                             <tr>
                                 <td colspan="{{ $isPersonal ? 5 : 6 }}"
                                     style="text-align:center; padding:3rem; color:var(--text-muted);">
-                                    <div style="font-size:2rem; margin-bottom:0.5rem;">📭</div>
+                                    <div style="font-size:2rem; margin-bottom:0.5rem;"></div>
                                     Aucune tâche pour ce projet
                                 </td>
                             </tr>
@@ -358,7 +365,7 @@
                 </table>
                 <div id="no-filter-result"
                     style="display:none; text-align:center; padding:3rem; color:var(--text-muted);">
-                    <div style="font-size:2rem; margin-bottom:0.5rem;">🔍</div>
+                    <div style="font-size:2rem; margin-bottom:0.5rem;"></div>
                     Aucune tâche dans cette catégorie
                 </div>
             </div>
@@ -381,7 +388,7 @@
                         <div class="card" style="margin-bottom:1.5rem; border:1px solid rgba(245,158,11,0.3);">
                             <h3
                                 style="font-family:'Sora',sans-serif; font-size:1rem; font-weight:700; color:#FBBF24; margin-bottom:1rem;">
-                                ⚠️ {{ $unassignedTasks->count() }} tâche(s) non assignée(s)
+                                {{ $unassignedTasks->count() }} tâche(s) non assignée(s)
                             </h3>
                             <div style="display:flex; flex-wrap:wrap; gap:8px;">
                                 @foreach ($unassignedTasks as $task)
@@ -391,7 +398,6 @@
                             </div>
                         </div>
                     @endif
-
                     <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap:1.5rem;">
                         @foreach ($team->members as $member)
                             @php
@@ -505,6 +511,33 @@
             </div>
         @endif
 
+        {{-- ===== MODAL NOTE ===== --}}
+        <div id="note-modal"
+            style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center;">
+            <div
+                style="background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:2rem; width:100%; max-width:520px; margin:1rem; box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem;">
+                    <h3 id="note-task-title"
+                        style="font-family:'Sora',sans-serif; font-size:1rem; font-weight:700; color:var(--text-primary);">
+                    </h3>
+                    <button onclick="closeNote()"
+                        style="background:transparent; border:none; color:var(--text-muted); font-size:1.4rem; cursor:pointer; line-height:1;">×</button>
+                </div>
+                <textarea id="note-content" placeholder="Écris ta note ici..."
+                    style="width:100%; min-height:180px; background:var(--bg-column); border:1px solid var(--border); border-radius:10px; padding:12px 14px; color:var(--text-primary); font-size:0.9rem; font-family:inherit; resize:vertical; outline:none; box-sizing:border-box;"></textarea>
+                <div style="display:flex; gap:10px; margin-top:1rem; justify-content:flex-end;">
+                    <button onclick="closeNote()"
+                        style="padding:8px 20px; border-radius:10px; border:1px solid var(--border); background:transparent; color:var(--text-secondary); cursor:pointer;">Annuler</button>
+                    <button onclick="saveNote()" id="note-save-btn"
+                        style="padding:8px 24px; border-radius:10px; border:none; background:var(--accent-grad); color:white; font-weight:700; cursor:pointer;">💾
+                        Sauvegarder</button>
+                </div>
+                <div id="note-status"
+                    style="margin-top:0.7rem; font-size:0.8rem; text-align:center; color:var(--text-muted); min-height:1.2rem;">
+                </div>
+            </div>
+        </div>
+
     </div>
 @endsection
 
@@ -568,15 +601,12 @@
             const targetColName = targetList.closest('.kanban-column').querySelector('.column-title').textContent.trim();
             const srcColId = sourceList.id.replace('plist-', '');
 
-            // Déplacement immédiat
             targetList.appendChild(taskEl);
             taskEl.style.opacity = '1';
             showOrHideEmpty(targetList);
             showOrHideEmpty(sourceList);
             updatePCount(columnId);
             updatePCount(srcColId);
-
-            // Sync tableau + stats
             updateTableRow(draggedPersonalTaskId, targetColName);
             updateStatsBar();
 
@@ -631,7 +661,6 @@
             });
             const total = todo + inprog + done;
             const progress = total > 0 ? Math.round((done / total) * 100) : 0;
-
             document.querySelectorAll('[onclick]').forEach(el => {
                 const fn = el.getAttribute('onclick') || '';
                 const val = el.querySelector('div:first-child');
@@ -651,7 +680,6 @@
                 };
                 if (counts[f] !== undefined) btn.textContent = btn.textContent.replace(/\d+/, counts[f]);
             });
-
             const bar = document.querySelector('[style*="transition:width 0.5s"]');
             if (bar) bar.style.width = progress + '%';
             document.querySelectorAll('[style*="font-size:2rem"]').forEach(el => {
@@ -714,5 +742,76 @@
                     selectEl.style.border = '1px solid #EF4444';
                 });
         }
+
+        // ===== NOTES =====
+        let currentTaskId = null;
+
+        function openNote(taskId, taskTitle, content) {
+            currentTaskId = taskId;
+            document.getElementById('note-task-title').textContent = ' ' + taskTitle;
+            document.getElementById('note-content').value = content || '';
+            document.getElementById('note-status').textContent = '';
+            document.getElementById('note-modal').style.display = 'flex';
+            setTimeout(() => document.getElementById('note-content').focus(), 100);
+        }
+
+        function closeNote() {
+            document.getElementById('note-modal').style.display = 'none';
+            currentTaskId = null;
+        }
+
+        function saveNote() {
+            if (!currentTaskId) return;
+            const content = document.getElementById('note-content').value;
+            const btn = document.getElementById('note-save-btn');
+            const status = document.getElementById('note-status');
+            btn.disabled = true;
+            btn.textContent = 'Sauvegarde...';
+
+            fetch(`/tasks/${currentTaskId}/note`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        content
+                    })
+                })
+                .then(r => r.json())
+                .then(d => {
+                    if (d.success) {
+                        status.style.color = '#10B981';
+                        status.textContent = '✓ Note sauvegardée !';
+                        btn.textContent = ' Sauvegarder';
+                        btn.disabled = false;
+                        const noteBtn = document.querySelector(`[data-note-task="${currentTaskId}"]`);
+                        if (noteBtn) {
+                            if (content.trim()) {
+                                noteBtn.style.background = 'rgba(99,102,241,0.2)';
+                                noteBtn.style.border = '1px solid rgba(99,102,241,0.5)';
+                                noteBtn.style.color = '#818CF8';
+                                noteBtn.textContent = ' ✓';
+                            } else {
+                                noteBtn.style.background = 'rgba(255,255,255,0.05)';
+                                noteBtn.style.border = '1px solid var(--border)';
+                                noteBtn.style.color = 'var(--text-muted)';
+                                noteBtn.textContent = '';
+                            }
+                        }
+                        setTimeout(() => closeNote(), 800);
+                    }
+                })
+                .catch(() => {
+                    status.style.color = '#EF4444';
+                    status.textContent = '✗ Erreur, réessaie.';
+                    btn.textContent = 'Sauvegarder';
+                    btn.disabled = false;
+                });
+        }
+
+        document.getElementById('note-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeNote();
+        });
     </script>
 @endpush
