@@ -6,7 +6,7 @@
 
             <div class="page-header">
                 <div>
-                    <h1 class="page-title"> Nouveau membre</h1>
+                    <h1 class="page-title">Nouveau membre</h1>
                     <p class="page-subtitle">Créer un compte et assigner à une équipe</p>
                 </div>
                 <a href="{{ route('admin.users.index') }}" class="btn-secondary">Retour</a>
@@ -53,28 +53,34 @@
                             placeholder="Répéter le mot de passe">
                     </div>
 
-                    {{-- Assigner à une équipe (combobox) --}}
-                    <div style="border-top:1px solid var(--border); margin:1.5rem 0; padding-top:1.5rem;">
+                    {{-- Rôle --}}
+                    <div class="form-group">
+                        <label class="form-label">Rôle *</label>
+                        <select name="role" class="form-control" onchange="toggleTeam(this.value)">
+                            <option value="user" {{ old('role') !== 'admin' ? 'selected' : '' }}>Membre</option>
+                            <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
+                        </select>
+                    </div>
+
+                    {{-- Équipe (masquée si admin) --}}
+                    <div id="team-section" style="border-top:1px solid var(--border); margin:1.5rem 0; padding-top:1.5rem;">
                         <div class="form-group">
-                            <label class="form-label"> Assigner à une équipe</label>
+                            <label class="form-label">Assigner à une équipe</label>
                             <select name="team_id" class="form-control">
-                                <option value=""> Aucune équipe (optionnel)</option>
+                                <option value="">Aucune équipe (optionnel)</option>
                                 @foreach ($teams as $team)
-                                    <option value="{{ $team->id }}" {{ old('team_id') == $team->id ? 'selected' : '' }}>
+                                    <option value="{{ $team->id }}"
+                                        {{ old('team_id') == $team->id ? 'selected' : '' }}>
                                         {{ $team->name }} — {{ $team->project?->title ?? 'Sans projet' }}
                                         ({{ $team->members->count() }} membre(s))
                                     </option>
                                 @endforeach
                             </select>
-                            @error('team_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-
                         </div>
                     </div>
 
                     <div style="display:flex; gap:10px; margin-top:1.5rem;">
-                        <button type="submit" class="btn-primary"> Créer le membre</button>
+                        <button type="submit" class="btn-primary">Créer</button>
                         <a href="{{ route('admin.users.index') }}" class="btn-secondary">Annuler</a>
                     </div>
                 </form>
@@ -82,4 +88,12 @@
 
         </div>
     </div>
+
+    <script>
+        function toggleTeam(role) {
+            document.getElementById('team-section').style.display = role === 'admin' ? 'none' : 'block';
+        }
+        // Init
+        toggleTeam(document.querySelector('[name="role"]').value);
+    </script>
 @endsection
