@@ -2,25 +2,26 @@
 cd /var/www
 
 # Créer .env depuis les variables d'environnement
-touch .env
-echo "APP_NAME=${APP_NAME}" >> .env
-echo "APP_ENV=${APP_ENV}" >> .env
-echo "APP_KEY=${APP_KEY}" >> .env
-echo "APP_DEBUG=${APP_DEBUG}" >> .env
-echo "APP_URL=${APP_URL}" >> .env
-echo "LOG_CHANNEL=stderr" >> .env
-echo "LOG_LEVEL=error" >> .env
-echo "DB_CONNECTION=${DB_CONNECTION}" >> .env
-echo "DB_HOST=${DB_HOST}" >> .env
-echo "DB_PORT=${DB_PORT}" >> .env
-echo "DB_DATABASE=${DB_DATABASE}" >> .env
-echo "DB_USERNAME=${DB_USERNAME}" >> .env
-echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
-echo "SESSION_DRIVER=${SESSION_DRIVER:-cookie}" >> .env
-echo "SESSION_LIFETIME=120" >> .env
-echo "CACHE_STORE=${CACHE_STORE:-array}" >> .env
-echo "QUEUE_CONNECTION=sync" >> .env
-echo "FILESYSTEM_DISK=local" >> .env
+cat > .env << ENVEOF
+APP_NAME=${APP_NAME}
+APP_ENV=${APP_ENV}
+APP_KEY=${APP_KEY}
+APP_DEBUG=${APP_DEBUG}
+APP_URL=${APP_URL}
+LOG_CHANNEL=stderr
+LOG_LEVEL=error
+DB_CONNECTION=${DB_CONNECTION}
+DB_HOST=${DB_HOST}
+DB_PORT=${DB_PORT}
+DB_DATABASE=${DB_DATABASE}
+DB_USERNAME=${DB_USERNAME}
+DB_PASSWORD=${DB_PASSWORD}
+SESSION_DRIVER=cookie
+SESSION_LIFETIME=120
+CACHE_STORE=array
+QUEUE_CONNECTION=sync
+FILESYSTEM_DISK=local
+ENVEOF
 
 # Cache config
 php artisan config:cache
