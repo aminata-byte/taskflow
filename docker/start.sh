@@ -8,6 +8,7 @@ APP_ENV=${APP_ENV}
 APP_KEY=${APP_KEY}
 APP_DEBUG=${APP_DEBUG}
 APP_URL=${APP_URL}
+ASSET_URL=${APP_URL}
 LOG_CHANNEL=stderr
 LOG_LEVEL=error
 DB_CONNECTION=${DB_CONNECTION}
@@ -23,7 +24,7 @@ QUEUE_CONNECTION=sync
 FILESYSTEM_DISK=local
 ENVEOF
 
-# Cache config
+# Force HTTPS
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
