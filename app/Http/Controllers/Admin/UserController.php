@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::where('role', 'user')
+        $users = User::where('role', 'user')->where('created_by_admin', true)
             ->withCount('assignedTasks')
             ->with('teams.project')
             ->latest()
@@ -38,10 +38,11 @@ class UserController extends Controller
         ]);
 
         $user = User::create([
-            'name'     => $validated['name'],
-            'email'    => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role'     => $validated['role'],
+            'name'             => $validated['name'],
+            'email'            => $validated['email'],
+            'password'         => Hash::make($validated['password']),
+            'role'             => $validated['role'],
+            'created_by_admin' => true,
         ]);
 
         // Assigner à une équipe seulement si c'est un membre
@@ -65,19 +66,6 @@ class UserController extends Controller
         $user->teams()->syncWithoutDetaching([$request->team_id]);
 
         return back()->with('success', 'Membre ajouté à l\'équipe !');
-    }
-
-    public function removeTeam(Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'team_id' => 'required|exists:teams,id',
-        ]);
-
-        $user = User::find($request->user_id);
-        $user->teams()->detach($request->team_id);
-
-        return back()->with('success', 'Membre retiré de l\'équipe.');
     }
 
     public function destroy(User $user)

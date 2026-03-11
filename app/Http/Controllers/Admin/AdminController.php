@@ -13,7 +13,7 @@ class AdminController extends Controller
     public function index()
     {
         // Stats globales
-        $totalUsers    = User::where('role', 'user')->count();
+        $totalUsers = User::where('role', 'user')->where('created_by_admin', true)->count();
         $totalProjects = Project::has('teams')->count();
         $totalTasks    = Task::count();
         $totalTeams    = Team::count();
@@ -38,7 +38,7 @@ class AdminController extends Controller
             ->get();
 
         // Membres avec leurs tâches
-        $members = User::where('role', 'user')
+        $members = User::where('role', 'user')->where('created_by_admin', true)
             ->withCount('assignedTasks')
             ->with(['assignedTasks.column'])
             ->get()
