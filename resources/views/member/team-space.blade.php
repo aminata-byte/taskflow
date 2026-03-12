@@ -14,7 +14,7 @@
                     <h1 class="page-title">{{ $workspace['team']->name }}</h1>
                     <p class="page-subtitle">Vos tâches assignées</p>
                 </div>
-                <a href="{{ route('workspace.choose') }}" class="btn-secondary">Changer d'espace</a>
+                {{-- <a href="{{ route('workspace.choose') }}" class="btn-secondary">Changer d'espace</a> --}}
             </div>
 
             {{-- MES TÂCHES (drag & drop) --}}

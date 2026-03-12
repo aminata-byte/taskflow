@@ -36,10 +36,10 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# ✅ migrate (sans fresh = ne supprime pas les données)
+# migrate (sans fresh = ne supprime pas les données)
 php artisan migrate --force
 
-# ✅ Créer l'admin s'il n'existe pas
+#  Créer l'admin s'il n'existe pas
 php artisan db:seed --class=AdminSeeder --force
 
 # Start supervisor
