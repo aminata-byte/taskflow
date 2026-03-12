@@ -2,11 +2,83 @@
 
 @section('title', 'Espace Équipe')
 
+@push('styles')
+    <style>
+        /* Kanban scroll horizontal sur mobile */
+        .kanban-board {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .kanban-board-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .kanban-board-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .kanban-board-1 {
+            grid-template-columns: 1fr;
+        }
+
+        @media (max-width: 768px) {
+
+            .kanban-board-3,
+            .kanban-board-2 {
+                display: flex !important;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 0.5rem;
+                gap: 0.75rem;
+            }
+
+            .kanban-board-3 .kanban-column,
+            .kanban-board-2 .kanban-column {
+                min-width: 260px;
+                scroll-snap-align: start;
+                flex-shrink: 0;
+            }
+
+            .team-grid {
+                display: flex !important;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 0.5rem;
+                gap: 0.75rem;
+            }
+
+            .team-grid>div {
+                min-width: 220px;
+                scroll-snap-align: start;
+                flex-shrink: 0;
+            }
+        }
+
+        /* Tâche en cours de drag tactile */
+        .task-card.touch-dragging {
+            opacity: 0.5;
+            transform: scale(0.97);
+        }
+
+        .kanban-column.touch-over {
+            background: rgba(99, 102, 241, 0.08) !important;
+            border-color: rgba(99, 102, 241, 0.4) !important;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="page-container">
 
         @foreach ($workspaces as $workspace)
-            @php $wsIndex = $loop->index; @endphp
+            @php
+                $wsIndex = $loop->index;
+                $colCount = $workspace['columns']->count();
+                $gridClass = $colCount >= 3 ? 'kanban-board-3' : ($colCount == 2 ? 'kanban-board-2' : 'kanban-board-1');
+            @endphp
 
             {{-- HEADER --}}
             <div class="page-header">
@@ -14,18 +86,15 @@
                     <h1 class="page-title">{{ $workspace['team']->name }}</h1>
                     <p class="page-subtitle">Vos tâches assignées</p>
                 </div>
-                {{-- <a href="{{ route('workspace.choose') }}" class="btn-secondary">Changer d'espace</a> --}}
             </div>
 
-            {{-- MES TÂCHES (drag & drop) --}}
+            {{-- MES TÂCHES --}}
             <div class="card" style="margin-bottom:2rem;">
-
                 <h2 style="font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:700; margin-bottom:1.5rem;">
                     {{ $workspace['project']->title }}
                 </h2>
 
-                <div
-                    style="display:grid; grid-template-columns: repeat({{ $workspace['columns']->count() }}, 1fr); gap:1rem;">
+                <div class="kanban-board {{ $gridClass }}">
                     @foreach ($workspace['columns'] as $column)
                         <div class="kanban-column" data-column-id="{{ $column->id }}" ondragover="allowDrop(event)"
                             ondrop="dropTask(event, {{ $column->id }}, {{ $wsIndex }})"
@@ -60,7 +129,6 @@
                                                     @php $isLate = \Carbon\Carbon::parse($task->due_date)->isPast(); @endphp
                                                     <span
                                                         style="font-size:0.75rem; color:{{ $isLate ? '#F87171' : 'var(--text-muted)' }}">
-                                                        {{ $isLate ? '' : '' }}
                                                         {{ \Carbon\Carbon::parse($task->due_date)->format('d/m/Y') }}
                                                     </span>
                                                 @else
@@ -96,14 +164,13 @@
                         <div style="margin-bottom:2rem;">
                             <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
                                 <div
-                                    style="width:34px; height:34px; background:var(--accent-grad); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.85rem; color:white;">
+                                    style="width:34px; height:34px; background:var(--accent-grad); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.85rem; color:white; flex-shrink:0;">
                                     {{ strtoupper(substr($data['user']->name, 0, 1)) }}
                                 </div>
                                 <span style="font-weight:600;">{{ $data['user']->name }}</span>
                             </div>
 
-                            <div
-                                style="display:grid; grid-template-columns: repeat({{ $workspace['columns']->count() }}, 1fr); gap:1rem;">
+                            <div class="kanban-board team-grid {{ $gridClass }}">
                                 @foreach ($workspace['columns'] as $column)
                                     <div
                                         style="background:var(--bg-column); border-radius:12px; padding:1rem; border:1px solid var(--border);">
@@ -146,6 +213,7 @@
 
 @push('scripts')
     <script>
+        // ─── DRAG & DROP SOURIS ───────────────────────────────────────
         let draggedTaskId = null;
         let draggedWsIndex = null;
 
@@ -169,18 +237,90 @@
             event.preventDefault();
             document.querySelectorAll('.kanban-column').forEach(c => c.style.background = '');
             if (!draggedTaskId || draggedWsIndex !== wsIndex) return;
+            moveTask(draggedTaskId, columnId, wsIndex);
+            draggedTaskId = null;
+            draggedWsIndex = null;
+        }
 
-            const taskEl = document.querySelector(`[data-task-id="${draggedTaskId}"]`);
+        // ─── DRAG & DROP TACTILE (mobile) ────────────────────────────
+        let touchTask = null;
+        let touchWs = null;
+        let touchClone = null;
+
+        document.addEventListener('touchstart', function(e) {
+            const card = e.target.closest('.task-card');
+            if (!card) return;
+            touchTask = card;
+            touchWs = parseInt(card.dataset.ws);
+            card.classList.add('touch-dragging');
+
+            // Clone visuel qui suit le doigt
+            touchClone = card.cloneNode(true);
+            touchClone.style.cssText = `
+            position: fixed; z-index: 9999; pointer-events: none;
+            width: ${card.offsetWidth}px; opacity: 0.85;
+            transform: scale(1.03); box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+        `;
+            document.body.appendChild(touchClone);
+        }, {
+            passive: true
+        });
+
+        document.addEventListener('touchmove', function(e) {
+            if (!touchTask || !touchClone) return;
+            const touch = e.touches[0];
+            touchClone.style.left = (touch.clientX - touchClone.offsetWidth / 2) + 'px';
+            touchClone.style.top = (touch.clientY - 30) + 'px';
+
+            // Highlight colonne sous le doigt
+            document.querySelectorAll('.kanban-column').forEach(c => c.classList.remove('touch-over'));
+            touchClone.style.display = 'none';
+            const el = document.elementFromPoint(touch.clientX, touch.clientY);
+            touchClone.style.display = '';
+            const col = el ? el.closest('.kanban-column') : null;
+            if (col) col.classList.add('touch-over');
+        }, {
+            passive: true
+        });
+
+        document.addEventListener('touchend', function(e) {
+            if (!touchTask) return;
+            touchTask.classList.remove('touch-dragging');
+            if (touchClone) {
+                touchClone.remove();
+                touchClone = null;
+            }
+
+            const touch = e.changedTouches[0];
+            // Trouver la colonne sous le doigt
+            const el = document.elementFromPoint(touch.clientX, touch.clientY);
+            const col = el ? el.closest('.kanban-column') : null;
+            document.querySelectorAll('.kanban-column').forEach(c => c.classList.remove('touch-over'));
+
+            if (col) {
+                const columnId = parseInt(col.dataset.columnId);
+                const taskId = parseInt(touchTask.dataset.taskId);
+                moveTask(taskId, columnId, touchWs);
+            }
+
+            touchTask = null;
+            touchWs = null;
+        });
+
+        // ─── LOGIQUE COMMUNE ─────────────────────────────────────────
+        function moveTask(taskId, columnId, wsIndex) {
+            const taskEl = document.querySelector(`[data-task-id="${taskId}"]`);
             const targetList = document.getElementById(`list-${wsIndex}-${columnId}`);
             if (!taskEl || !targetList) return;
             if (taskEl.parentElement === targetList) return;
 
             const sourceList = taskEl.parentElement;
+            const sourceColId = sourceList.id.split('-').pop();
+
             targetList.appendChild(taskEl);
             showOrHideEmpty(targetList);
             showOrHideEmpty(sourceList);
             updateCount(wsIndex, columnId);
-            const sourceColId = sourceList.id.split('-').pop();
             updateCount(wsIndex, sourceColId);
 
             fetch('{{ route('member.move-task') }}', {
@@ -190,7 +330,7 @@
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
                     body: JSON.stringify({
-                        task_id: draggedTaskId,
+                        task_id: taskId,
                         column_id: columnId
                     })
                 })
@@ -205,9 +345,6 @@
                     }
                 })
                 .catch(() => location.reload());
-
-            draggedTaskId = null;
-            draggedWsIndex = null;
         }
 
         function showOrHideEmpty(listEl) {

@@ -1,31 +1,31 @@
 /* ============================================
    TASKFLOW - Design Principal
-   Style: Dark Modern Kanban — Cartes bien visibles
+   Style: Light Modern
    Fonts: Sora (titres) + DM Sans (corps)
    ============================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
 
 :root {
-  --bg-primary: #0D1117;
-  --bg-secondary: #161B22;
-  --bg-card: #1a1f35;
-  --bg-column: #12172a;
+  --bg-primary: #F0F2F5;
+  --bg-secondary: #E8EAED;
+  --bg-card: #FFFFFF;
+  --bg-column: #F5F6FA;
   --accent-1: #6366F1;
   --accent-2: #8B5CF6;
   --accent-3: #06B6D4;
   --accent-grad: linear-gradient(135deg, #6366F1, #8B5CF6);
-  --text-primary: #F1F5F9;
-  --text-secondary: #94A3B8;
-  --text-muted: #475569;
-  --border: rgba(99, 102, 241, 0.25);
-  --border-hover: rgba(99, 102, 241, 0.6);
+  --text-primary: #1E2333;
+  --text-secondary: #4B5563;
+  --text-muted: #9CA3AF;
+  --border: rgba(99, 102, 241, 0.15);
+  --border-hover: rgba(99, 102, 241, 0.4);
   --success: #10B981;
   --warning: #F59E0B;
   --danger: #EF4444;
-  --radius: 14px;
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.5);
+  --radius: 12px;
+  --shadow: 0 8px 32px rgba(99, 102, 241, 0.1);
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 * {
@@ -36,17 +36,12 @@
 
 body {
   font-family: 'DM Sans', sans-serif;
-  min-height: 100vh;
-  color: var(--text-primary);
   background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
   background-image:
-    radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 55%),
-    url("im.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+    radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.04) 0%, transparent 50%);
 }
 
 h1,
@@ -62,10 +57,10 @@ h4 {
    NAVBAR
    ============================================ */
 .navbar-taskflow {
-  background: rgba(10, 13, 20, 0.92);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.12);
   padding: 0 2rem;
   height: 64px;
   display: flex;
@@ -75,6 +70,7 @@ h4 {
   top: 0;
   z-index: 100;
   animation: slideDown 0.4s ease;
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.08);
 }
 
 @keyframes slideDown {
@@ -105,7 +101,7 @@ h4 {
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
 }
 
 .navbar-logo .logo-text {
@@ -135,8 +131,8 @@ h4 {
 }
 
 .nav-link:hover {
-  color: var(--text-primary);
-  background: rgba(99, 102, 241, 0.15);
+  color: var(--accent-1);
+  background: rgba(99, 102, 241, 0.08);
 }
 
 .user-menu {
@@ -160,7 +156,7 @@ h4 {
 
 .user-avatar:hover {
   border-color: var(--accent-1);
-  box-shadow: 0 0 14px rgba(99, 102, 241, 0.5);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.3);
 }
 
 /* ============================================
@@ -209,26 +205,22 @@ h4 {
   cursor: pointer;
   text-decoration: none;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.25);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 22px rgba(99, 102, 241, 0.6);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
   color: white;
-}
-
-.btn-primary:active {
-  transform: translateY(0);
 }
 
 .btn-secondary {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(26, 31, 53, 0.9);
+  background: white;
   color: var(--text-secondary);
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  border: 1px solid rgba(99, 102, 241, 0.2);
   padding: 9px 18px;
   border-radius: 10px;
   font-family: 'DM Sans', sans-serif;
@@ -237,18 +229,19 @@ h4 {
   cursor: pointer;
   text-decoration: none;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .btn-secondary:hover {
-  color: var(--text-primary);
-  border-color: var(--border-hover);
-  background: rgba(99, 102, 241, 0.15);
+  color: var(--accent-1);
+  border-color: var(--accent-1);
+  background: rgba(99, 102, 241, 0.05);
 }
 
 .btn-danger {
-  background: rgba(239, 68, 68, 0.15);
+  background: rgba(239, 68, 68, 0.1);
   color: var(--danger);
-  border: 1px solid rgba(239, 68, 68, 0.35);
+  border: 1px solid rgba(239, 68, 68, 0.25);
   padding: 6px 12px;
   border-radius: 8px;
   font-size: 0.8rem;
@@ -262,15 +255,15 @@ h4 {
 }
 
 .btn-danger:hover {
-  background: rgba(239, 68, 68, 0.28);
-  border-color: var(--danger);
+  background: rgba(239, 68, 68, 0.2);
   color: var(--danger);
+  border-color: var(--danger);
 }
 
 .btn-edit {
-  background: rgba(99, 102, 241, 0.12);
+  background: rgba(99, 102, 241, 0.08);
   color: var(--accent-1);
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  border: 1px solid rgba(99, 102, 241, 0.2);
   padding: 6px 12px;
   border-radius: 8px;
   font-size: 0.8rem;
@@ -284,21 +277,21 @@ h4 {
 }
 
 .btn-edit:hover {
-  background: rgba(99, 102, 241, 0.25);
+  background: rgba(99, 102, 241, 0.18);
   border-color: var(--accent-1);
 }
 
 /* ============================================
-   CARTES GÉNÉRIQUES
+   CARTES
    ============================================ */
 .card {
-  background: rgba(22, 28, 50, 0.95);
-  border: 1px solid var(--border);
+  background: var(--bg-card);
+  border: 1px solid rgba(99, 102, 241, 0.1);
   border-radius: var(--radius);
   padding: 1.5rem;
-  box-shadow: var(--shadow-card);
   transition: all 0.25s ease;
   animation: fadeInUp 0.5s ease both;
+  box-shadow: var(--shadow-card);
 }
 
 .card:hover {
@@ -330,8 +323,8 @@ h4 {
 }
 
 .stat-card {
-  background: rgba(22, 28, 50, 0.96);
-  border: 1px solid var(--border);
+  background: var(--bg-card);
+  border: 1px solid rgba(99, 102, 241, 0.1);
   border-radius: var(--radius);
   padding: 1.5rem;
   display: flex;
@@ -370,16 +363,16 @@ h4 {
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
+  height: 3px;
   background: var(--accent-grad);
   opacity: 0;
   transition: opacity 0.3s;
 }
 
 .stat-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   border-color: var(--border-hover);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(99, 102, 241, 0.2);
+  box-shadow: var(--shadow);
 }
 
 .stat-card:hover::before {
@@ -398,23 +391,23 @@ h4 {
 }
 
 .stat-icon.purple {
-  background: rgba(99, 102, 241, 0.2);
+  background: rgba(99, 102, 241, 0.1);
 }
 
 .stat-icon.blue {
-  background: rgba(6, 182, 212, 0.2);
+  background: rgba(6, 182, 212, 0.1);
 }
 
 .stat-icon.green {
-  background: rgba(16, 185, 129, 0.2);
+  background: rgba(16, 185, 129, 0.1);
 }
 
 .stat-icon.yellow {
-  background: rgba(245, 158, 11, 0.2);
+  background: rgba(245, 158, 11, 0.1);
 }
 
 .stat-icon.red {
-  background: rgba(239, 68, 68, 0.2);
+  background: rgba(239, 68, 68, 0.1);
 }
 
 .stat-value {
@@ -441,8 +434,8 @@ h4 {
 }
 
 .project-card {
-  background: rgba(22, 28, 50, 0.96);
-  border: 1px solid var(--border);
+  background: var(--bg-card);
+  border: 1px solid rgba(99, 102, 241, 0.1);
   border-radius: var(--radius);
   padding: 1.5rem;
   animation: fadeInUp 0.5s ease both;
@@ -492,7 +485,7 @@ h4 {
 .project-card:hover {
   border-color: var(--border-hover);
   transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(99, 102, 241, 0.2);
+  box-shadow: var(--shadow);
 }
 
 .project-card:hover::before {
@@ -524,9 +517,9 @@ h4 {
 }
 
 .meta-badge {
-  background: rgba(99, 102, 241, 0.15);
+  background: rgba(99, 102, 241, 0.08);
   color: var(--accent-1);
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  border: 1px solid rgba(99, 102, 241, 0.15);
   padding: 3px 10px;
   border-radius: 20px;
   font-size: 0.78rem;
@@ -536,7 +529,7 @@ h4 {
 .project-actions {
   display: flex;
   gap: 8px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid rgba(99, 102, 241, 0.08);
   padding-top: 1rem;
 }
 
@@ -549,7 +542,7 @@ h4 {
   justify-content: space-between;
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.1);
   animation: fadeInUp 0.4s ease;
 }
 
@@ -560,7 +553,7 @@ h4 {
   overflow-x: auto;
   padding-bottom: 1rem;
   scrollbar-width: thin;
-  scrollbar-color: var(--accent-1) transparent;
+  scrollbar-color: var(--accent-1) var(--bg-secondary);
 }
 
 .kanban-board::-webkit-scrollbar {
@@ -568,7 +561,8 @@ h4 {
 }
 
 .kanban-board::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--bg-secondary);
+  border-radius: 3px;
 }
 
 .kanban-board::-webkit-scrollbar-thumb {
@@ -577,8 +571,8 @@ h4 {
 }
 
 .kanban-column {
-  background: rgba(16, 20, 40, 0.97);
-  border: 1px solid var(--border);
+  background: var(--bg-column);
+  border: 1px solid rgba(99, 102, 241, 0.1);
   border-radius: 14px;
   width: 320px;
   min-width: 320px;
@@ -586,7 +580,7 @@ h4 {
   flex-direction: column;
   max-height: calc(100vh - 200px);
   animation: fadeInUp 0.5s ease both;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .kanban-column:nth-child(1) {
@@ -606,10 +600,10 @@ h4 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.08);
   position: sticky;
   top: 0;
-  background: rgba(16, 20, 40, 0.98);
+  background: var(--bg-column);
   border-radius: 14px 14px 0 0;
   z-index: 1;
 }
@@ -628,17 +622,17 @@ h4 {
 
 .column-dot.todo {
   background: #6366F1;
-  box-shadow: 0 0 8px rgba(99, 102, 241, 0.7);
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.4);
 }
 
 .column-dot.progress {
   background: #F59E0B;
-  box-shadow: 0 0 8px rgba(245, 158, 11, 0.7);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
 }
 
 .column-dot.done {
   background: #10B981;
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.7);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
 }
 
 .column-title {
@@ -649,9 +643,9 @@ h4 {
 }
 
 .column-count {
-  background: rgba(99, 102, 241, 0.15);
+  background: rgba(99, 102, 241, 0.1);
   color: var(--accent-1);
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  border: 1px solid rgba(99, 102, 241, 0.2);
   border-radius: 20px;
   padding: 2px 10px;
   font-size: 0.8rem;
@@ -666,13 +660,13 @@ h4 {
   flex-direction: column;
   gap: 0.75rem;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  scrollbar-color: var(--border) transparent;
 }
 
 .task-add-form {
   padding: 1rem 1.25rem;
-  border-top: 1px solid var(--border);
-  background: rgba(99, 102, 241, 0.04);
+  border-top: 1px solid rgba(99, 102, 241, 0.08);
+  background: rgba(99, 102, 241, 0.02);
   border-radius: 0 0 14px 14px;
 }
 
@@ -680,8 +674,8 @@ h4 {
 .task-add-form select,
 .task-add-form textarea {
   width: 100%;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--border);
+  background: white;
+  border: 1px solid rgba(99, 102, 241, 0.15);
   border-radius: 8px;
   color: var(--text-primary);
   padding: 8px 12px;
@@ -696,7 +690,7 @@ h4 {
 .task-add-form select:focus,
 .task-add-form textarea:focus {
   border-color: var(--accent-1);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .task-add-form input::placeholder {
@@ -704,15 +698,15 @@ h4 {
 }
 
 .task-add-form select option {
-  background: #1a1f35;
+  background: white;
   color: var(--text-primary);
 }
 
 .btn-add-task {
   width: 100%;
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(99, 102, 241, 0.06);
   color: var(--accent-1);
-  border: 1px dashed rgba(99, 102, 241, 0.45);
+  border: 1px dashed rgba(99, 102, 241, 0.3);
   border-radius: 8px;
   padding: 8px;
   font-family: 'DM Sans', sans-serif;
@@ -727,7 +721,7 @@ h4 {
 }
 
 .btn-add-task:hover {
-  background: rgba(99, 102, 241, 0.2);
+  background: rgba(99, 102, 241, 0.12);
   border-style: solid;
 }
 
@@ -735,15 +729,15 @@ h4 {
    TÂCHES
    ============================================ */
 .task-card {
-  background: rgba(26, 32, 56, 0.98);
-  border: 1px solid rgba(99, 102, 241, 0.18);
+  background: white;
+  border: 1px solid rgba(99, 102, 241, 0.1);
   border-radius: 10px;
   padding: 1rem;
   transition: all 0.2s ease;
   cursor: grab;
   position: relative;
   animation: taskSlideIn 0.3s ease both;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 @keyframes taskSlideIn {
@@ -759,13 +753,9 @@ h4 {
 }
 
 .task-card:hover {
-  border-color: rgba(99, 102, 241, 0.5);
+  border-color: var(--border-hover);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99, 102, 241, 0.15);
-}
-
-.task-card:active {
-  cursor: grabbing;
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.12);
 }
 
 .task-card::before {
@@ -824,21 +814,21 @@ h4 {
 }
 
 .priority-badge.haute {
-  background: rgba(239, 68, 68, 0.15);
-  color: #F87171;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.1);
+  color: #DC2626;
+  border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 .priority-badge.moyenne {
-  background: rgba(245, 158, 11, 0.15);
-  color: #FBBF24;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  background: rgba(245, 158, 11, 0.1);
+  color: #D97706;
+  border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 .priority-badge.basse {
-  background: rgba(16, 185, 129, 0.15);
-  color: #34D399;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .task-actions {
@@ -867,23 +857,23 @@ h4 {
 }
 
 .task-btn.edit {
-  background: rgba(99, 102, 241, 0.15);
+  background: rgba(99, 102, 241, 0.1);
   color: var(--accent-1);
 }
 
 .task-btn.edit:hover {
-  background: rgba(99, 102, 241, 0.3);
+  background: rgba(99, 102, 241, 0.2);
   color: var(--accent-1);
 }
 
 .task-btn.delete {
-  background: rgba(239, 68, 68, 0.12);
-  color: #F87171;
+  background: rgba(239, 68, 68, 0.08);
+  color: #DC2626;
 }
 
 .task-btn.delete:hover {
-  background: rgba(239, 68, 68, 0.28);
-  color: #F87171;
+  background: rgba(239, 68, 68, 0.18);
+  color: #DC2626;
 }
 
 .task-due {
@@ -897,7 +887,7 @@ h4 {
 }
 
 .task-due.overdue {
-  color: #F87171;
+  color: #DC2626;
 }
 
 /* ============================================
@@ -909,12 +899,12 @@ h4 {
 }
 
 .form-card {
-  background: rgba(22, 28, 50, 0.97);
-  border: 1px solid var(--border);
+  background: var(--bg-card);
+  border: 1px solid rgba(99, 102, 241, 0.1);
   border-radius: 16px;
   padding: 2rem;
   animation: fadeInUp 0.4s ease;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-card);
 }
 
 .form-group {
@@ -934,8 +924,8 @@ h4 {
 
 .form-control {
   width: 100%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  border: 1px solid rgba(99, 102, 241, 0.15);
   border-radius: 10px;
   color: var(--text-primary);
   padding: 12px 16px;
@@ -947,8 +937,8 @@ h4 {
 
 .form-control:focus {
   border-color: var(--accent-1);
-  background: rgba(99, 102, 241, 0.07);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .form-control::placeholder {
@@ -956,7 +946,7 @@ h4 {
 }
 
 .form-control option {
-  background: #1a1f35;
+  background: white;
   color: var(--text-primary);
 }
 
@@ -965,7 +955,7 @@ h4 {
 }
 
 .invalid-feedback {
-  color: #F87171;
+  color: #DC2626;
   font-size: 0.82rem;
   margin-top: 5px;
   display: flex;
@@ -1001,15 +991,15 @@ h4 {
 }
 
 .alert-success {
-  background: rgba(16, 185, 129, 0.14);
-  border: 1px solid rgba(16, 185, 129, 0.35);
-  color: #34D399;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  color: #059669;
 }
 
 .alert-danger {
-  background: rgba(239, 68, 68, 0.14);
-  border: 1px solid rgba(239, 68, 68, 0.35);
-  color: #F87171;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #DC2626;
 }
 
 /* ============================================
@@ -1024,7 +1014,7 @@ h4 {
 .empty-icon {
   font-size: 3.5rem;
   margin-bottom: 1rem;
-  opacity: 0.5;
+  opacity: 0.4;
   display: block;
 }
 
@@ -1098,5 +1088,64 @@ h4 {
 
   .navbar-taskflow {
     padding: 0 1rem;
+  }
+}
+
+/* ============================================
+   RESPONSIVE ADDITIONNEL
+   ============================================ */
+
+/* Stats : 2 colonnes sur mobile */
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+}
+
+/* Projets : 1 colonne sur mobile */
+@media (max-width: 768px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .page-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .form-card {
+    padding: 1.25rem;
+  }
+}
+
+/* Kanban projet (projects/show) : scroll horizontal sur mobile */
+@media (max-width: 768px) {
+  .kanban-board {
+    flex-direction: row !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 1rem;
+    align-items: flex-start;
+  }
+
+  .kanban-column {
+    min-width: 280px !important;
+    width: 280px !important;
+    scroll-snap-align: start;
+    max-height: unset;
+    flex-shrink: 0;
   }
 }

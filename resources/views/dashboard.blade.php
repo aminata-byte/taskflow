@@ -4,7 +4,7 @@
 @section('content')
     <div class="page-container">
 
-        <div class="page-header">
+        <div class="page-header" style="flex-wrap:wrap; gap:1rem;">
             <div>
                 <h1 class="page-title">Bonjour, {{ Auth::user()->name }}</h1>
                 <p class="page-subtitle">Voici un aperçu de tous tes projets et tâches.</p>
@@ -15,40 +15,31 @@
         {{-- Stats --}}
         <div class="stats-grid">
             <div class="stat-card">
-                <div>
-                    <div class="stat-value">{{ $totalProjects }}</div>
-                    <div class="stat-label">Projets actifs</div>
-                </div>
+                <div class="stat-value">{{ $totalProjects }}</div>
+                <div class="stat-label">Projets actifs</div>
             </div>
             <div class="stat-card">
-                <div>
-                    <div class="stat-value">{{ $totalTasks }}</div>
-                    <div class="stat-label">Tâches totales</div>
-                </div>
+                <div class="stat-value">{{ $totalTasks }}</div>
+                <div class="stat-label">Tâches totales</div>
             </div>
             <div class="stat-card">
-                <div>
-                    <div class="stat-value">{{ $doneTasks }}</div>
-                    <div class="stat-label">Terminées</div>
-                </div>
+                <div class="stat-value">{{ $doneTasks }}</div>
+                <div class="stat-label">Terminées</div>
             </div>
             <div class="stat-card">
-                <div>
-                    <div class="stat-value">{{ $inProgressTasks }}</div>
-                    <div class="stat-label">En cours</div>
-                </div>
+                <div class="stat-value">{{ $inProgressTasks }}</div>
+                <div class="stat-label">En cours</div>
             </div>
             <div class="stat-card">
-                <div>
-                    <div class="stat-value" style="color:#EF4444;">{{ $lateTasks }}</div>
-                    <div class="stat-label">En retard</div>
-                </div>
+                <div class="stat-value" style="color:#EF4444;">{{ $lateTasks }}</div>
+                <div class="stat-label">En retard</div>
             </div>
         </div>
 
         {{-- Projets récents --}}
         <div style="margin-top:2.5rem;">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
+            <div
+                style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; flex-wrap:wrap; gap:0.75rem;">
                 <h2 style="font-family:'Sora',sans-serif; font-size:1.2rem; font-weight:700;">Projets récents</h2>
                 <a href="{{ route('projects.index') }}" class="btn-secondary" style="font-size:0.85rem;">Voir tous</a>
             </div>

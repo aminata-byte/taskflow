@@ -4,7 +4,7 @@
 @section('content')
     <div class="page-container">
 
-        <div class="page-header">
+        <div class="page-header" style="flex-wrap:wrap; gap:1rem;">
             <div>
                 <h1 class="page-title">Mes Projets</h1>
                 <p class="page-subtitle">{{ $projects->count() }} projet(s) au total</p>
@@ -13,7 +13,7 @@
         </div>
 
         @if (session('success'))
-            <div class="alert alert-success"> {{ session('success') }}</div>
+            <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
         @if ($projects->isEmpty())
@@ -34,7 +34,6 @@
                     @endphp
                     <div class="project-card" style="position:relative;">
 
-                        {{-- Badge équipe en haut à gauche --}}
                         @if ($team)
                             <div style="position:absolute; top:14px; left:14px;">
                                 <span
@@ -44,7 +43,6 @@
                             </div>
                         @endif
 
-                        {{-- Titre avec marge si badge équipe --}}
                         <h3 class="project-name" style="{{ $team ? 'margin-top:2rem;' : '' }}">
                             {{ $project->title }}
                         </h3>
@@ -53,7 +51,6 @@
                             {{ $project->description ?? 'Aucune description.' }}
                         </p>
 
-                        {{-- Barre de progression --}}
                         @if ($total > 0)
                             <div style="margin-bottom:1rem;">
                                 <div
@@ -81,9 +78,9 @@
                             @endif
                         </div>
 
-                        <div class="project-actions">
+                        <div class="project-actions" style="flex-wrap:wrap;">
                             <a href="{{ route('projects.show', $project) }}" class="btn-primary"
-                                style="flex:1; justify-content:center;">Ouvrir</a>
+                                style="flex:1; justify-content:center; min-width:80px;">Ouvrir</a>
                             <a href="{{ route('projects.edit', $project) }}" class="btn-secondary">✏️</a>
                             <form action="{{ route('projects.destroy', $project) }}" method="POST"
                                 onsubmit="return confirm('Supprimer ce projet ?')">
