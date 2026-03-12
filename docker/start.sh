@@ -36,8 +36,8 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# Run migrations
-php artisan migrate --force
+# Run migrations fresh (recreate tables)
+php artisan migrate:fresh --force
 
 # Start supervisor
 /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf

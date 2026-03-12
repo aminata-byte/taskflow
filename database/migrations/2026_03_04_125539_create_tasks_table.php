@@ -20,8 +20,8 @@ return new class extends Migration
             $table->date('due_date')->nullable(); // Date limite de la tâche
 
             // ── Niveau de priorité ──
-            $table->enum('priority', ['low', 'medium', 'high'])
-                ->default('medium'); // Par défaut : priorité moyenne
+            $table->enum('priority', ['basse', 'moyenne', 'haute'])
+                ->default('basse');
 
             // ── Clé étrangère : cette tâche appartient à une colonne ──
             $table->foreignId('column_id')
