@@ -13,17 +13,17 @@ class AdminController extends Controller
     public function index()
     {
         // Stats globales
-        $totalUsers = User::where('role', 'user')->where('created_by_admin', true)->count();
-        $totalProjects = Project::has('teams')->count();
+        $totalUsers    = User::where('role', 'user')->where('created_by_admin', true)->count();
+        $totalProjects = Project::count();
         $totalTasks    = Task::count();
         $totalTeams    = Team::count();
 
-        // Tâches par statut (avec accents)
+        // Tâches par statut
         $tasksDone       = Task::whereHas('column', fn($q) => $q->where('name', 'Terminé'))->count();
         $tasksInProgress = Task::whereHas('column', fn($q) => $q->where('name', 'En cours'))->count();
         $tasksTodo       = Task::whereHas('column', fn($q) => $q->where('name', 'À faire'))->count();
 
-        // Tâches en retard (date dépassée + pas dans Terminé)
+        // Tâches en retard
         $tasksLate = Task::whereNotNull('due_date')
             ->where('due_date', '<', now())
             ->whereHas('column', fn($q) => $q->where('name', '!=', 'Terminé'))
@@ -38,7 +38,8 @@ class AdminController extends Controller
             ->get();
 
         // Membres avec leurs tâches
-        $members = User::where('role', 'user')->where('created_by_admin', true)
+        $members = User::where('role', 'user')
+            ->where('created_by_admin', true)
             ->withCount('assignedTasks')
             ->with(['assignedTasks.column'])
             ->get()
@@ -52,8 +53,8 @@ class AdminController extends Controller
                 return $user;
             });
 
-        // Projets avec progression + retards
-        $projects = Project::has('teams')->with(['columns.tasks'])->get()->map(function ($project) {
+        // Tous les projets avec progression
+        $projects = Project::with(['columns.tasks'])->get()->map(function ($project) {
             $allTasks = $project->columns->flatMap->tasks;
             $total    = $allTasks->count();
             $done     = $project->columns->where('name', 'Terminé')->flatMap->tasks->count();
