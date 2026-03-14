@@ -160,7 +160,7 @@
             </div>
         </div>
 
-        {{-- ONGLETS --}}
+        {{-- ONGLETS
         @if (!$isPersonal)
             <div class="tab-bar" style="display:flex; gap:10px; margin-bottom:1.5rem;">
                 <button onclick="showTab('taches')" id="tab-taches"
@@ -168,7 +168,7 @@
                 <button onclick="showTab('membres')" id="tab-membres"
                     style="padding:10px 28px; border-radius:30px; border:2px solid var(--border); background:transparent; color:var(--text-secondary); font-weight:700; font-size:0.95rem; cursor:pointer;">Membres</button>
             </div>
-        @endif
+        @endif --}}
 
         {{-- ===== TÂCHES ===== --}}
         <div id="panel-taches">
