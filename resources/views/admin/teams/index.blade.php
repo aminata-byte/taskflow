@@ -41,6 +41,7 @@
 
                     <div class="project-actions">
                         <a href="{{ route('admin.teams.show', $team) }}" class="btn-primary btn-sm">Voir détails</a>
+                        <a href="{{ route('admin.teams.edit', $team) }}" class="btn-secondary"> Modifier</a>
                         <form action="{{ route('admin.teams.destroy', $team) }}" method="POST"
                             onsubmit="return confirm('Supprimer cette équipe ?')">
                             @csrf @method('DELETE')
