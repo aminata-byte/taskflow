@@ -428,7 +428,7 @@
             <div id="panel-membres" style="display:none;">
                 @if (!$team)
                     <div class="empty-state">
-                        <span class="empty-icon">👥</span>
+                        <span class="empty-icon"></span>
                         <h3 class="empty-title">Aucune équipe assignée à ce projet</h3>
                         @if (Auth::user()->isAdmin())
                             <a href="{{ route('admin.teams.create') }}" class="btn-primary">+ Créer une équipe</a>
@@ -439,7 +439,7 @@
                         <div
                             style="padding:1.25rem 1.5rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                             <h2 style="font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:700;">
-                                👥 Membres de l'équipe — {{ $team->name }}
+                                 Membres de l'équipe — {{ $team->name }}
                             </h2>
                             <span
                                 style="background:rgba(99,102,241,0.15); color:var(--accent-1); padding:3px 12px; border-radius:20px; font-size:0.82rem; font-weight:700;">
@@ -539,7 +539,7 @@
                                                 @if ($memberLate > 0)
                                                     <span
                                                         style="background:rgba(239,68,68,0.15); color:#F87171; padding:3px 12px; border-radius:20px; font-size:0.82rem; font-weight:700;">
-                                                        🔥 {{ $memberLate }}
+                                                         {{ $memberLate }}
                                                     </span>
                                                 @else
                                                     <span style="color:var(--text-muted); font-size:0.82rem;">—</span>
@@ -570,7 +570,7 @@
                             <div
                                 style="padding:1.25rem 1.5rem; border-top:1px solid var(--border); background:rgba(245,158,11,0.04);">
                                 <div style="font-size:0.85rem; font-weight:600; color:#FBBF24; margin-bottom:1rem;">
-                                    ⚠️ {{ $unassignedTasks->count() }} tâche(s) non assignée(s) — assigner à un membre :
+                                     {{ $unassignedTasks->count() }} tâche(s) non assignée(s) — assigner à un membre :
                                 </div>
                                 <div style="display:flex; flex-wrap:wrap; gap:10px;">
                                     @foreach ($team->members as $member)

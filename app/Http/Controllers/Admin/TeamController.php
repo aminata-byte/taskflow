@@ -59,6 +59,27 @@ class TeamController extends Controller
         return redirect()->route('admin.teams.index');
     }
 
+    public function edit(Team $team)
+    {
+        $users    = User::where('role', 'user')->where('created_by_admin', true)->get();
+        $projects = Project::all();
+        return view('admin.teams.edit', compact('team', 'users', 'projects'));
+    }
+
+    public function update(Request $request, Team $team)
+    {
+        $request->validate([
+            'name'      => 'required|string|max:255',
+            'members'   => 'nullable|array',
+            'members.*' => 'exists:users,id',
+        ]);
+
+        $team->update(['name' => $request->name]);
+        $team->members()->sync($request->members ?? []);
+
+        return redirect()->route('admin.teams.index')->with('success', 'Équipe mise à jour !');
+    }
+
     public function destroy(Team $team)
     {
         $team->delete();

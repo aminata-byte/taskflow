@@ -54,7 +54,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('users', App\Http\Controllers\Admin\UserController::class)->only(['index', 'create', 'store', 'destroy']);
 
     Route::post('teams/assign-task', [App\Http\Controllers\Admin\TeamController::class, 'assignTask'])->name('teams.assign-task');
-    Route::resource('teams', App\Http\Controllers\Admin\TeamController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
+    Route::resource('teams', App\Http\Controllers\Admin\TeamController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
 });
 
 // ==============================
