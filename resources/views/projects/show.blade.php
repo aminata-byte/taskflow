@@ -160,15 +160,16 @@
             </div>
         </div>
 
-        {{-- ONGLETS
         @if (!$isPersonal)
             <div class="tab-bar" style="display:flex; gap:10px; margin-bottom:1.5rem;">
                 <button onclick="showTab('taches')" id="tab-taches"
-                    style="padding:10px 28px; border-radius:30px; border:2px solid rgba(99,102,241,0.5); background:var(--accent-grad); color:white; font-weight:700; font-size:0.95rem; cursor:pointer;">Tâches</button>
+                    style="padding:10px 28px; border-radius:30px; border:2px solid rgba(99,102,241,0.5); background:var(--accent-grad); color:white; font-weight:700; font-size:0.95rem; cursor:pointer;">📋
+                    Tâches</button>
                 <button onclick="showTab('membres')" id="tab-membres"
-                    style="padding:10px 28px; border-radius:30px; border:2px solid var(--border); background:transparent; color:var(--text-secondary); font-weight:700; font-size:0.95rem; cursor:pointer;">Membres</button>
+                    style="padding:10px 28px; border-radius:30px; border:2px solid var(--border); background:transparent; color:var(--text-secondary); font-weight:700; font-size:0.95rem; cursor:pointer;">👥
+                    Membres</button>
             </div>
-        @endif --}}
+        @endif
 
         {{-- ===== TÂCHES ===== --}}
         <div id="panel-taches">
@@ -422,137 +423,178 @@
             </div>
         </div>
 
-        {{-- ===== MEMBRES ===== --}}
+        {{-- ===== PANEL MEMBRES ===== --}}
         @if (!$isPersonal)
             <div id="panel-membres" style="display:none;">
                 @if (!$team)
                     <div class="empty-state">
+                        <span class="empty-icon">👥</span>
                         <h3 class="empty-title">Aucune équipe assignée à ce projet</h3>
                         @if (Auth::user()->isAdmin())
                             <a href="{{ route('admin.teams.create') }}" class="btn-primary">+ Créer une équipe</a>
                         @endif
                     </div>
                 @else
-                    @php $unassignedTasks = $allTasks->whereNull('assigned_to')->values(); @endphp
-                    @if ($unassignedTasks->isNotEmpty())
-                        <div class="card" style="margin-bottom:1.5rem; border:1px solid rgba(245,158,11,0.3);">
-                            <h3
-                                style="font-family:'Sora',sans-serif; font-size:1rem; font-weight:700; color:#FBBF24; margin-bottom:1rem;">
-                                {{ $unassignedTasks->count() }} tâche(s) non assignée(s)</h3>
-                            <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                                @foreach ($unassignedTasks as $task)
-                                    <span
-                                        style="background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); color:#FBBF24; padding:4px 12px; border-radius:20px; font-size:0.82rem;">{{ $task->title }}</span>
-                                @endforeach
-                            </div>
+                    <div class="card" style="padding:0; overflow:hidden;">
+                        <div
+                            style="padding:1.25rem 1.5rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                            <h2 style="font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:700;">
+                                👥 Membres de l'équipe — {{ $team->name }}
+                            </h2>
+                            <span
+                                style="background:rgba(99,102,241,0.15); color:var(--accent-1); padding:3px 12px; border-radius:20px; font-size:0.82rem; font-weight:700;">
+                                {{ $team->members->count() }} membre(s)
+                            </span>
                         </div>
-                    @endif
-                    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:1.5rem;">
-                        @foreach ($team->members as $member)
-                            @php
-                                $memberTasks = $member->assignedTasks->filter(
-                                    fn($t) => $t->column && $project->columns->pluck('id')->contains($t->column_id),
-                                );
-                                $memberDone = $memberTasks->filter(fn($t) => $t->column?->name === 'Terminé')->count();
-                                $memberInProg = $memberTasks
-                                    ->filter(fn($t) => $t->column?->name === 'En cours')
-                                    ->count();
-                                $memberTodo = $memberTasks->filter(fn($t) => $t->column?->name === 'À faire')->count();
-                                $memberTotal = $memberTasks->count();
-                                $memberPct = $memberTotal > 0 ? round(($memberDone / $memberTotal) * 100) : 0;
-                                $memberLate = $memberTasks
-                                    ->filter(
-                                        fn($t) => $t->column?->name !== 'Terminé' &&
-                                            $t->due_date &&
-                                            \Carbon\Carbon::parse($t->due_date)->isPast(),
-                                    )
-                                    ->count();
-                            @endphp
-                            <div class="card" style="padding:1.5rem;">
-                                <div style="display:flex; align-items:center; gap:12px; margin-bottom:1rem;">
-                                    <div
-                                        style="width:44px; height:44px; background:var(--accent-grad); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.1rem; flex-shrink:0; color:white;">
-                                        {{ strtoupper(substr($member->name, 0, 1)) }}</div>
-                                    <div>
-                                        <div style="font-weight:700; font-size:1rem;">{{ $member->name }}</div>
-                                        <div style="color:var(--text-muted); font-size:0.78rem; word-break:break-all;">
-                                            {{ $member->email }}</div>
-                                    </div>
-                                </div>
-                                <div style="display:flex; gap:8px; margin-bottom:1rem; flex-wrap:wrap;">
-                                    <span
-                                        style="background:rgba(99,102,241,0.15); color:#818CF8; padding:3px 10px; border-radius:20px; font-size:0.75rem; font-weight:700;">📋
-                                        {{ $memberTodo }}</span>
-                                    <span
-                                        style="background:rgba(245,158,11,0.15); color:#FBBF24; padding:3px 10px; border-radius:20px; font-size:0.75rem; font-weight:700;">⚡
-                                        {{ $memberInProg }}</span>
-                                    <span
-                                        style="background:rgba(16,185,129,0.15); color:#34D399; padding:3px 10px; border-radius:20px; font-size:0.75rem; font-weight:700;">✅
-                                        {{ $memberDone }}</span>
-                                    @if ($memberLate > 0)
-                                        <span
-                                            style="background:rgba(239,68,68,0.15); color:#F87171; padding:3px 10px; border-radius:20px; font-size:0.75rem; font-weight:700;">🔥
-                                            {{ $memberLate }}</span>
-                                    @endif
-                                </div>
-                                <div
-                                    style="background:rgba(255,255,255,0.05); border-radius:20px; height:6px; overflow:hidden; margin-bottom:4px;">
-                                    <div
-                                        style="background:var(--accent-grad); height:100%; width:{{ $memberPct }}%; border-radius:20px;">
-                                    </div>
-                                </div>
-                                <div style="color:var(--text-muted); font-size:0.75rem; margin-bottom:1.2rem;">
-                                    {{ $memberPct }}% complété</div>
-                                @if ($memberTasks->isNotEmpty())
-                                    <div style="margin-bottom:1.2rem;">
-                                        <div
-                                            style="font-size:0.8rem; font-weight:600; color:var(--text-secondary); margin-bottom:8px; text-transform:uppercase;">
-                                            Tâches assignées</div>
-                                        @foreach ($memberTasks as $task)
-                                            @php
-                                                $tState = $task->column?->name ?? '?';
-                                                $tColor = match ($tState) {
-                                                    'Terminé' => '#10B981',
-                                                    'En cours' => '#F59E0B',
-                                                    default => '#6366F1',
-                                                };
-                                                $tLate =
-                                                    $task->column?->name !== 'Terminé' &&
-                                                    $task->due_date &&
-                                                    \Carbon\Carbon::parse($task->due_date)->isPast();
-                                            @endphp
-                                            <div
-                                                style="display:flex; justify-content:space-between; align-items:center; padding:7px 10px; background:rgba(255,255,255,0.03); border-radius:8px; margin-bottom:5px; border:1px solid var(--border);">
-                                                <span
-                                                    style="font-size:0.85rem; font-weight:500;">{{ $task->title }}</span>
-                                                <div style="display:flex; gap:5px; align-items:center; flex-shrink:0;">
-                                                    @if ($tLate)
-                                                        <span style="color:#F87171; font-size:0.72rem;">🔥</span>
-                                                    @endif
-                                                    <span
-                                                        style="color:{{ $tColor }}; font-size:0.72rem; font-weight:700; white-space:nowrap;">{{ $tState }}</span>
+                        <div style="overflow-x:auto;">
+                            <table style="width:100%; border-collapse:collapse; min-width:480px;">
+                                <thead>
+                                    <tr style="border-bottom:1px solid var(--border); background:rgba(255,255,255,0.02);">
+                                        <th
+                                            style="text-align:left; padding:12px 20px; color:var(--text-secondary); font-size:0.75rem; text-transform:uppercase;">
+                                            Membre</th>
+                                        <th
+                                            style="text-align:center; padding:12px 16px; color:var(--text-secondary); font-size:0.75rem; text-transform:uppercase;">
+                                            À faire</th>
+                                        <th
+                                            style="text-align:center; padding:12px 16px; color:var(--text-secondary); font-size:0.75rem; text-transform:uppercase;">
+                                            En cours</th>
+                                        <th
+                                            style="text-align:center; padding:12px 16px; color:var(--text-secondary); font-size:0.75rem; text-transform:uppercase;">
+                                            Terminé</th>
+                                        <th
+                                            style="text-align:center; padding:12px 16px; color:var(--text-secondary); font-size:0.75rem; text-transform:uppercase;">
+                                            Retard</th>
+                                        <th
+                                            style="text-align:left; padding:12px 16px; color:var(--text-secondary); font-size:0.75rem; text-transform:uppercase;">
+                                            Progression</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($team->members as $member)
+                                        @php
+                                            $memberTasks = $member->assignedTasks->filter(
+                                                fn($t) => $t->column &&
+                                                    $project->columns->pluck('id')->contains($t->column_id),
+                                            );
+                                            $memberDone = $memberTasks
+                                                ->filter(fn($t) => $t->column?->name === 'Terminé')
+                                                ->count();
+                                            $memberInProg = $memberTasks
+                                                ->filter(fn($t) => $t->column?->name === 'En cours')
+                                                ->count();
+                                            $memberTodo = $memberTasks
+                                                ->filter(fn($t) => $t->column?->name === 'À faire')
+                                                ->count();
+                                            $memberTotal = $memberTasks->count();
+                                            $memberPct =
+                                                $memberTotal > 0 ? round(($memberDone / $memberTotal) * 100) : 0;
+                                            $memberLate = $memberTasks
+                                                ->filter(
+                                                    fn($t) => $t->column?->name !== 'Terminé' &&
+                                                        $t->due_date &&
+                                                        \Carbon\Carbon::parse($t->due_date)->isPast(),
+                                                )
+                                                ->count();
+                                        @endphp
+                                        <tr style="border-bottom:1px solid var(--border);">
+                                            {{-- Nom + email --}}
+                                            <td style="padding:14px 20px;">
+                                                <div style="display:flex; align-items:center; gap:10px;">
+                                                    <div
+                                                        style="width:36px; height:36px; background:var(--accent-grad); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.9rem; color:white; flex-shrink:0;">
+                                                        {{ strtoupper(substr($member->name, 0, 1)) }}
+                                                    </div>
+                                                    <div>
+                                                        <div style="font-weight:600; font-size:0.9rem;">
+                                                            {{ $member->name }}</div>
+                                                        <div style="color:var(--text-muted); font-size:0.75rem;">
+                                                            {{ $member->email }}</div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                @endif
-                                @if (Auth::user()->isAdmin() && $unassignedTasks->isNotEmpty())
-                                    <form action="{{ route('admin.teams.assign-task') }}" method="POST"
-                                        style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-                                        @csrf
-                                        <input type="hidden" name="user_id" value="{{ $member->id }}">
-                                        <select name="task_id" class="form-control"
-                                            style="flex:1; padding:8px 12px; font-size:0.82rem; min-width:150px;" required>
-                                            <option value="">-- Assigner une tâche --</option>
-                                            @foreach ($unassignedTasks as $ut)
-                                                <option value="{{ $ut->id }}">{{ $ut->title }}</option>
-                                            @endforeach
-                                        </select>
-                                        <button type="submit" class="btn-primary" style="padding:8px 14px;">✓</button>
-                                    </form>
-                                @endif
+                                            </td>
+                                            {{-- À faire --}}
+                                            <td style="padding:14px 16px; text-align:center;">
+                                                <span
+                                                    style="background:rgba(99,102,241,0.15); color:#818CF8; padding:3px 12px; border-radius:20px; font-size:0.82rem; font-weight:700;">
+                                                    {{ $memberTodo }}
+                                                </span>
+                                            </td>
+                                            {{-- En cours --}}
+                                            <td style="padding:14px 16px; text-align:center;">
+                                                <span
+                                                    style="background:rgba(245,158,11,0.15); color:#FBBF24; padding:3px 12px; border-radius:20px; font-size:0.82rem; font-weight:700;">
+                                                    {{ $memberInProg }}
+                                                </span>
+                                            </td>
+                                            {{-- Terminé --}}
+                                            <td style="padding:14px 16px; text-align:center;">
+                                                <span
+                                                    style="background:rgba(16,185,129,0.15); color:#34D399; padding:3px 12px; border-radius:20px; font-size:0.82rem; font-weight:700;">
+                                                    {{ $memberDone }}
+                                                </span>
+                                            </td>
+                                            {{-- Retard --}}
+                                            <td style="padding:14px 16px; text-align:center;">
+                                                @if ($memberLate > 0)
+                                                    <span
+                                                        style="background:rgba(239,68,68,0.15); color:#F87171; padding:3px 12px; border-radius:20px; font-size:0.82rem; font-weight:700;">
+                                                        🔥 {{ $memberLate }}
+                                                    </span>
+                                                @else
+                                                    <span style="color:var(--text-muted); font-size:0.82rem;">—</span>
+                                                @endif
+                                            </td>
+                                            {{-- Progression --}}
+                                            <td style="padding:14px 16px; min-width:140px;">
+                                                <div style="display:flex; align-items:center; gap:8px;">
+                                                    <div
+                                                        style="flex:1; background:rgba(255,255,255,0.05); border-radius:20px; height:6px; overflow:hidden;">
+                                                        <div
+                                                            style="background:var(--accent-grad); height:100%; width:{{ $memberPct }}%; border-radius:20px;">
+                                                        </div>
+                                                    </div>
+                                                    <span
+                                                        style="font-size:0.78rem; font-weight:700; color:var(--accent-1); white-space:nowrap;">{{ $memberPct }}%</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {{-- Assigner tâches non assignées --}}
+                        @php $unassignedTasks = $allTasks->whereNull('assigned_to')->values(); @endphp
+                        @if (Auth::user()->isAdmin() && $unassignedTasks->isNotEmpty())
+                            <div
+                                style="padding:1.25rem 1.5rem; border-top:1px solid var(--border); background:rgba(245,158,11,0.04);">
+                                <div style="font-size:0.85rem; font-weight:600; color:#FBBF24; margin-bottom:1rem;">
+                                    ⚠️ {{ $unassignedTasks->count() }} tâche(s) non assignée(s) — assigner à un membre :
+                                </div>
+                                <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                                    @foreach ($team->members as $member)
+                                        <form action="{{ route('admin.teams.assign-task') }}" method="POST"
+                                            style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                                            @csrf
+                                            <input type="hidden" name="user_id" value="{{ $member->id }}">
+                                            <span
+                                                style="font-size:0.85rem; font-weight:600; color:var(--text-secondary); min-width:80px;">{{ $member->name }}
+                                                :</span>
+                                            <select name="task_id" class="form-control"
+                                                style="padding:7px 12px; font-size:0.82rem; min-width:180px;" required>
+                                                <option value="">-- Choisir une tâche --</option>
+                                                @foreach ($unassignedTasks as $ut)
+                                                    <option value="{{ $ut->id }}">{{ $ut->title }}</option>
+                                                @endforeach
+                                            </select>
+                                            <button type="submit" class="btn-primary" style="padding:7px 14px;">✓
+                                                Assigner</button>
+                                        </form>
+                                    @endforeach
+                                </div>
                             </div>
-                        @endforeach
+                        @endif
                     </div>
                 @endif
             </div>

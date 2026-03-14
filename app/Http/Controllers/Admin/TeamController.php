@@ -19,7 +19,7 @@ class TeamController extends Controller
 
     public function create()
     {
-        $users    = User::where('role', 'user')->get();
+        $users = User::where('role', 'user')->where('created_by_admin', true)->get();
         $projects = Project::all();
         return view('admin.teams.create', compact('users', 'projects'));
     }
